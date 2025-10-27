@@ -1,0 +1,39 @@
+{
+  "schedules": [
+    {
+      "id": "1761482303261",
+      "name": "Project Orchestration Workflow",
+      "mode": "architect",
+      "taskInstructions": "# Orchestrator Guide\n\n*See documentation for commands, achievements, and operational insights*\n\n## Core Workflow\n\n**MANDATORY**: Delegate ALL work to specialized modes using `new_task`. Subtasks create subtasks for complex work. Pass ALL data between subtasks.\n\n**Workflow Stages**: Implementation → Validation → Quality → Integration → Planning → [Loop]\n\n**Specialized Modes**:\n- **Implementation**: `🔧 implementation-core`, `🛡️ implementation-security`, `⚡ implementation-performance`, `✨ implementation-features`\n- **Validation**: `🔍 validation-static`, `🧪 validation-unit`, `🔗 validation-integration`, `🌐 validation-api`\n- **Quality**: `✅ quality-functional`, `📊 quality-performance`, `🔒 quality-security`, `🔄 quality-compatibility`\n- **Integration**: `💾 integration-commit`, `🚀 integration-deploy`, `📝 integration-document`, `🎯 integration-release`\n- **Planning**: `📈 planning-analysis`, `🎯 planning-priorities`, `🏗️ planning-architecture`, `📋 planning-requirements`\n\n## Execution Protocol\n\n**Core Execution Protocol**:\n1. **Time Tracking (TOP PRIORITY)**: Start `⏱️ Task Time Tracking` and record timing before any transition\n2. **Graph Analysis**: Identify optimal pipeline path\n3. **Complete Context**: Include ALL files, data, configurations, history\n4. **Contextual Data**: Read from relevant sources for context, update with findings\n5. **Clarifying Questions**: Ask ≥3 clarifying questions before each major transition\n6. **Subtask Delegation**: Use `new_task` with comprehensive instructions to specialized modes\n7. **Recursive Pattern**: Subtasks create subtasks for complex work (max depth 5)\n8. **Environment Sync**: Sync at key points (implementation, validation, integration)\n9. **Finalize Time Tracking**: Write end timestamp to task_timing.tsv before completion\n\n## Critical Protocols\n\n**Time Tracking Priority**:\n- MUST be initiated before any mode transition/task execution\n- On failure: abort operation, log to relevant sources, retry up to 3 times with exponential backoff\n- Atomic operations with file locking; complete pairs required for analysis\n- Failed recordings mark tasks as \"finalization-pending\"\n\n**Subtask Patterns**:\n- Max depth 5 levels; deeper nesting triggers consolidation\n- Termination: objectives met, resources exhausted, or time limits exceeded (max 2 hours)\n- Cycle detection prevents infinite recursion\n- Resource bounds: 50% of parent allocation\n\n**Information Flow**:\n- Forward: Implementation → Validation → Quality → Integration → Planning\n- Backward: Failed tests → fixes; merge conflicts → resolution\n- All inter-subtask data exchange validated with acknowledgment\n\n## Environment Integration (MANDATORY)\n\n**Synchronization Protocol**: All operations require successful sync before progression; failures block advancement\n\n**Sync Points**:\n- Implementation: Sync project files after code changes\n- Validation: Sync before validation, run activation checks after\n- Integration: Sync before final testing\n\n**Environment Requirements**: Define project-specific runtime requirements and dependencies\n**Common Commands**:\n- Test Runner: Execute project test suite with standard configuration\n- Parallel Execution: Run tests in parallel with configurable process limits\n\n## Mode Coordination\n\n**Inter-Mode Communication**: Clear protocols for data exchange with validation and acknowledgment\n\n**Dependency Resolution**: Automatic prerequisite checking; ensure dependent tasks complete before starting\n\n**Error Propagation**: Handle/report errors across mode boundaries with escalation procedures\n\n**Rollback Procedures**: Recovery steps for pipeline phase failures with automatic triggers\n\n## Question Protocol\n\n- **Pre-Transition**: ≥3 clarifying questions before each major process transition\n- **Post-Completion**: Validate understanding after each phase completion\n- **Backtrack Triggers**: Questions about root causes when loops occur\n- **Knowledge Preservation**: Questions about what insights to preserve\n\n*This guide outlines a structured approach to workflow management, emphasizing task delegation, data flow, and iterative improvement.*\n\n\n===\n\nYour next task is to continue fixing current issues or identify new ones for improvement. Review relevant sources to understand what remains to be completed or start investigating new areas.\n\n\n1. Switch to orchestrator mode\n2. Make sure to update task_timing.tsv as a first subtask\n3. Continue fixing current issues or identify new ones. Review relevant sources to understand what remains or start investigating new areas\n4. Update relevant sources regularly\n5. When finishing task - update it in task_timing.tsv\n6. Make sure to commit changes and sync with relevant systems ",
+      "scheduleType": "time",
+      "timeInterval": "10",
+      "timeUnit": "minute",
+      "selectedDays": {
+        "sun": true,
+        "mon": true,
+        "tue": true,
+        "wed": true,
+        "thu": true,
+        "fri": true,
+        "sat": true
+      },
+      "startDate": "",
+      "startHour": "",
+      "startMinute": "00",
+      "expirationDate": "",
+      "expirationHour": "00",
+      "expirationMinute": "00",
+      "requireActivity": false,
+      "active": true,
+      "taskInteraction": "wait",
+      "inactivityDelay": "3",
+      "lastExecutionTime": "2025-10-27T08:50:23.905Z",
+      "lastSkippedTime": "2025-10-27T09:01:00.912Z",
+      "lastTaskId": "d0ac062a-e4e6-4f79-808e-eb30d2d36eb8",
+      "nextExecutionTime": "2025-10-27T09:02:00.912Z",
+      "modeDisplayName": "Architect",
+      "createdAt": "2025-10-26T12:38:23.261Z",
+      "updatedAt": "2025-10-26T15:08:30.424Z"
+    }
+  ]
+}
