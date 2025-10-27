@@ -1,0 +1,11 @@
+# Development & Debug Commands
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_150', 'fail_cmd_151', 'fail_cmd_152'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_153', 'fail_cmd_154', 'fail_cmd_155'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_156', 'fail_cmd_157', 'fail_cmd_158'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_159', 'fail_cmd_160', 'fail_cmd_161'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_162', 'fail_cmd_163', 'fail_cmd_164'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_165', 'fail_cmd_166', 'fail_cmd_167'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_168', 'fail_cmd_169', 'fail_cmd_170'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_171', 'fail_cmd_172', 'fail_cmd_173'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_174', 'fail_cmd_175', 'fail_cmd_176'], Successful command: recovery_cmd
+- **Command Failure Recovery**: Context: resilience_test_0.25, Failed commands: ['fail_cmd_177', 'fail_cmd_178', 'fail_cmd_179'], Successful command: recovery_cmd
