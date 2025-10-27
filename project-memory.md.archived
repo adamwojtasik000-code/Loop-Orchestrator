@@ -1,5 +1,7 @@
 # Non-Obvious Implementation Patterns
 
+This section documents implementation patterns that are not immediately obvious from code inspection.
+
 ## Core Implementation Patterns
 - **Event-Driven Polling**: Use timed polling loops in main thread for updates instead of threading
 - **Sequential Resource Rotation**: Increment resource index circularly on errors rather than random selection
@@ -31,15 +33,13 @@
 - **Multi-System Consistency**: Verify state across different technology components
 - **Endpoint Failure Handling**: Inspect rate limiting and fallback logic during service failures
 - **Background Task Failures**: Monitor queue systems and logging for silent errors
-- **Model Cooldown Silent Failures**: Model state files timestamps cause silent blocking; check Unix time comparisons for debugging
-- **GUI Update Freezes**: GUI update calls in main thread prevent locks, but block event processing unexpectedly
-- **Multi-Technology Stack Debugging**: Hybrid technology systems require checking multiple state files for consistency
 
 ## Emergency Recovery Procedures
 - **Multi-Level Recovery Strategies**: Implement recovery procedures with rollback and mode-switching capabilities
-- **Complex Multi-Mode Recovery**: Multi-mode recovery with rollback capabilities
 
 # Development & Debug Commands
+
+This section contains commands useful for development and debugging.
 
 ## Common Commands
 - Test Runner: Execute project test suite with standard configuration
@@ -50,11 +50,7 @@
 
 # System Updates & Status
 
-[2025-10-27T10:06:36.829Z] [optimization-memory] - [creation]: Created persistent-memory.md with required 3-section structure and migrated patterns from project-memory.md
-[2025-10-27T10:07:20.238Z] [optimization-memory] - [migration]: Migrated additional patterns from .roo/rules-*/AGENTS.md files and consolidated content
-[2025-10-27T10:07:46.419Z] [optimization-memory] - [cleanup]: Archived project-memory.md as project-memory.md.archived after migration
-[2025-10-27T10:11:02.227Z] [integration-commit] - [commit]: Committed .roomodes with message "Loop 4: Further generalize custom-modes.yaml"
-- Finding: User clarified that .roomodes is the file to commit, not custom-modes.yaml
-- Command: git add .roomodes && git commit -m "Loop 4: Further generalize custom-modes.yaml"
-- Achievement: Successfully committed with hash 88c288e
-- Insight: File was staged and committed despite commit message referencing incorrect filename
+This section tracks system updates and status changes using apache-style log format.
+
+[2025-10-27T09:45:30.412Z] [optimization-memory] - [creation]: Created persistent-memory.md file with required 3-section structure
+[2025-10-27T09:49:10.432Z] [integration-commit] - [commit]: Committed generalization changes to persistent-memory.md with hash 15a74ff
