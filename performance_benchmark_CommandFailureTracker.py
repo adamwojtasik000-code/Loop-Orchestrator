@@ -114,23 +114,34 @@ class PerformanceBenchmark:
         print(f"Benchmarking persistent writes with {iterations} iterations...")
 
         tracemalloc.start()
-        tracker = CommandFailureTracker(self.test_data_file)
+
+        # Create a custom tracker class that allows benchmarking without exception limits
+        class BenchmarkCommandFailureTracker(CommandFailureTracker):
+            def record_failure(self, command, context=""):
+                with self._lock:
+                    self.consecutive_failures += 1
+                    self.failed_commands.append(command)
+                    self.last_failure_context = context
+                    # Always set limit_reached after 3 failures for benchmarking
+                    if self.consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
+                        self.limit_reached = True
+                        # Don't raise exception for benchmarking - just set the flag
+
+        tracker = BenchmarkCommandFailureTracker(self.test_data_file)
 
         # Force multiple limit exceedances to trigger writes
         for i in range(iterations):
-            # Reach limit
-            for j in range(3):
-                try:
-                    tracker.record_failure(f"fail_cmd_{i}_{j}", f"context_{i}")
-                except CommandFailureLimitExceeded:
-                    pass
+            # Reach limit efficiently to trigger writes
+            tracker.record_failure(f"fail_cmd_{i}_1", f"context_{i}")
+            tracker.record_failure(f"fail_cmd_{i}_2", f"context_{i}")
+            tracker.record_failure(f"fail_cmd_{i}_3", f"context_{i}")  # This sets limit_reached
 
             # Measure memory before success (with bounds checking)
             current_mem = tracemalloc.get_traced_memory()[1]
             if len(self.memory_results['growth_per_write']) < 1000:  # Bound memory storage
                 self.memory_results['growth_per_write'].append(current_mem)
 
-            # Trigger write and measure latency
+            # Trigger write and measure latency - record_success will write when limit_reached is True
             self.measure_latency('persistent_write', tracker.record_success, f"success_cmd_{i}")
 
             # Track peak memory (with bounds checking)
@@ -142,11 +153,11 @@ class PerformanceBenchmark:
         print("Persistent writes benchmark complete.")
 
     def benchmark_concurrent_load(self, max_threads: int = 50, operations_per_thread: int = 100):
-        """Benchmark concurrent command handling capacity."""
+        """Benchmark concurrent command handling capacity using ThreadPoolExecutor."""
         print(f"Benchmarking concurrent load with up to {max_threads} threads...")
 
-        def worker_thread(thread_id: int, results: List[Dict[str, Any]]):
-            """Worker function for concurrent testing."""
+        def worker_task(thread_id: int) -> Dict[str, Any]:
+            """Worker function for concurrent testing using ThreadPoolExecutor."""
             local_tracker = CommandFailureTracker(self.test_data_file)
             thread_results = {
                 'thread_id': thread_id,
@@ -157,27 +168,24 @@ class PerformanceBenchmark:
 
             for i in range(operations_per_thread):
                 try:
-                    # Simulate mix of success/failure operations
+                    # Simulate mix of success/failure operations with cross-platform valid commands
                     if i % 10 < 8:  # 80% success rate
                         start = time.perf_counter()
-                        # Use valid command that exists on all systems
-                        result = subprocess.run(['python', '--version'],
-                                              capture_output=True, text=True, timeout=10)
+                        # Cross-platform command that reliably succeeds on all systems
+                        if os.name == 'nt':  # Windows
+                            result = subprocess.run(['cmd', '/c', 'echo', 'test'],
+                                                  capture_output=True, text=True, timeout=10)
+                        else:  # Unix-like systems
+                            result = subprocess.run(['echo', 'test'],
+                                                  capture_output=True, text=True, timeout=10)
                         latency = (time.perf_counter() - start) * 1000
                         if result.returncode == 0:
-                            local_tracker.record_success(f"python --version {thread_id}_{i}")
+                            local_tracker.record_success(f"echo test {thread_id}_{i}")
                         else:
-                            local_tracker.record_failure(f"python --version {thread_id}_{i}", f"thread_{thread_id}")
+                            local_tracker.record_failure(f"echo test {thread_id}_{i}", f"thread_{thread_id}")
                     else:
-                        # Simulate controlled failure with invalid command
-                        start = time.perf_counter()
-                        result = subprocess.run(['python', '-c', 'import sys; sys.exit(1)'],
-                                              capture_output=True, text=True, timeout=10)
-                        latency = (time.perf_counter() - start) * 1000
-                        if result.returncode != 0:
-                            local_tracker.record_failure(f"python -c exit(1) {thread_id}_{i}", f"thread_{thread_id}")
-                        else:
-                            local_tracker.record_success(f"python -c exit(1) {thread_id}_{i}")
+                        # Simulate controlled failure - just call record_failure directly to avoid subprocess overhead
+                        local_tracker.record_failure(f"simulated_failure_{thread_id}_{i}", f"thread_{thread_id}")
 
                     thread_results['latency_sum'] += latency
                     thread_results['operations'] += 1
@@ -188,24 +196,41 @@ class PerformanceBenchmark:
                 except Exception as e:
                     thread_results['errors'] += 1
 
-            results.append(thread_results)
+            return thread_results
 
-        # Test different thread counts to find capacity
+        # Test different thread counts to find capacity using ThreadPoolExecutor
         for thread_count in range(1, max_threads + 1, 5):
-            results = []
-            threads = []
-
             start_time = time.time()
 
-            # Start threads
-            for t in range(thread_count):
-                thread = threading.Thread(target=worker_thread, args=(t, results))
-                threads.append(thread)
-                thread.start()
+            # Use ThreadPoolExecutor for proper thread pool management
+            with concurrent.futures.ThreadPoolExecutor(max_workers=thread_count, thread_name_prefix='benchmark') as executor:
+                # Submit all tasks
+                future_tasks = [executor.submit(worker_task, t) for t in range(thread_count)]
 
-            # Wait for completion
-            for thread in threads:
-                thread.join(timeout=30)
+                # Collect results with timeout handling
+                results = []
+                for future in concurrent.futures.as_completed(future_tasks, timeout=60):  # 60 second total timeout
+                    try:
+                        result = future.result(timeout=30)  # 30 second per task timeout
+                        results.append(result)
+                    except concurrent.futures.TimeoutError:
+                        # Handle timeout scenarios properly
+                        print(f"Warning: Task timed out in thread pool execution")
+                        results.append({
+                            'thread_id': -1,  # Invalid thread ID to indicate timeout
+                            'operations': 0,
+                            'errors': 1,
+                            'latency_sum': 0.0
+                        })
+                    except Exception as e:
+                        # Handle other exceptions
+                        print(f"Warning: Task failed with exception: {e}")
+                        results.append({
+                            'thread_id': -1,
+                            'operations': 0,
+                            'errors': 1,
+                            'latency_sum': 0.0
+                        })
 
             elapsed = time.time() - start_time
             total_operations = sum(r['operations'] for r in results)

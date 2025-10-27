@@ -195,9 +195,9 @@ class AsyncBufferedWriter:
     Uses background thread and queue for non-blocking I/O operations.
     """
 
-    DEFAULT_BUFFER_SIZE = 3  # Minimized for ultra-low latency
-    DEFAULT_FLUSH_INTERVAL = 0.5  # Sub-second flushes
-    DEFAULT_QUEUE_SIZE = 1000  # Max queued entries before blocking
+    DEFAULT_BUFFER_SIZE = 10  # Increased for better throughput
+    DEFAULT_FLUSH_INTERVAL = 0.1  # Faster flushes for concurrency
+    DEFAULT_QUEUE_SIZE = 10000  # Larger queue for concurrent operations
 
     def __init__(self, file_path: str, buffer_size: int = DEFAULT_BUFFER_SIZE,
                  flush_interval: float = DEFAULT_FLUSH_INTERVAL, queue_size: int = DEFAULT_QUEUE_SIZE):
@@ -208,27 +208,46 @@ class AsyncBufferedWriter:
         self.locker = FileLocker()
         self._shutdown_event = threading.Event()
         self._flush_event = threading.Event()
-        self._lock = threading.Lock()  # Add thread synchronization for file operations
         self._writer_thread = threading.Thread(target=self._writer_worker, daemon=True)
         self._writer_thread.start()
 
+        # Per-thread queues to eliminate queue contention
+        self._thread_queues = {}
+        self._thread_lock = threading.RLock()
+        self._lock = threading.Lock()  # Thread synchronization for file operations
+        self._thread_lock = self._thread_lock  # Ensure attribute exists for backward compatibility
+
     def add_entry(self, entry: str) -> float:
         """
-        Add entry to write queue (non-blocking, returns immediately).
+        Add entry to per-thread queue (non-blocking, returns immediately).
 
         Returns:
             Queue operation latency in milliseconds
         """
         start_time = time.time()
+        thread_id = threading.get_ident()
+
+        with self._thread_lock:
+            if thread_id not in self._thread_queues:
+                # Create per-thread queue for lock-free operations
+                self._thread_queues[thread_id] = queue.Queue(maxsize=self.write_queue.maxsize // 10)  # Smaller per-thread queues
+
+            thread_queue = self._thread_queues[thread_id]
 
         try:
-            # Non-blocking put - if queue is full, this will raise queue.Full
-            self.write_queue.put_nowait(entry)
-            # Signal writer thread to check for flush conditions
-            self._flush_event.set()
+            # Try per-thread queue first
+            thread_queue.put_nowait(entry)
         except queue.Full:
-            # Fallback to immediate write if queue is full
-            self._immediate_write(entry)
+            # Fallback to global queue
+            try:
+                self.write_queue.put_nowait(entry)
+            except queue.Full:
+                # Final fallback to immediate write
+                self._immediate_write(entry)
+
+        # Signal writer thread only periodically to reduce contention
+        if start_time % 0.01 < 0.001:  # Signal ~10% of the time
+            self._flush_event.set()
 
         return (time.time() - start_time) * 1000  # Convert to ms
 
@@ -252,27 +271,58 @@ class AsyncBufferedWriter:
         """Shutdown the writer thread gracefully."""
         self._shutdown_event.set()
         self._flush_event.set()
-        self._writer_thread.join(timeout=1.0)
+
+        # Flush all per-thread queues to global queue
+        with self._thread_lock:
+            for thread_queue in self._thread_queues.values():
+                while not thread_queue.empty():
+                    try:
+                        entry = thread_queue.get_nowait()
+                        self.write_queue.put_nowait(entry)
+                    except queue.Full:
+                        break
+
+        self._writer_thread.join(timeout=2.0)  # Increased timeout for draining queues
 
     def _writer_worker(self):
-        """Background writer thread that processes the queue."""
+        """Background writer thread that processes per-thread and global queues."""
         buffer: List[str] = []
         last_flush_time = time.time()
 
         while not self._shutdown_event.is_set():
             try:
-                # Wait for work or timeout
-                try:
-                    entry = self.write_queue.get(timeout=0.05)  # Faster polling
-                    buffer.append(entry)
-                except queue.Empty:
-                    pass
+                # Process per-thread queues first (lock-free)
+                entries_processed = 0
+                with self._thread_lock:
+                    thread_queues = list(self._thread_queues.items())
 
+                for thread_id, thread_queue in thread_queues:
+                    try:
+                        # Drain thread queue quickly
+                        with self._thread_lock:
+                            while len(buffer) < self.buffer_size and not thread_queue.empty():
+                                entry = thread_queue.get_nowait()
+                                buffer.append(entry)
+                                entries_processed += 1
+                    except queue.Empty:
+                        pass
+
+                # Process global queue if needed
+                if len(buffer) < self.buffer_size:
+                    try:
+                        entry = self.write_queue.get_nowait()
+                        buffer.append(entry)
+                        entries_processed += 1
+                    except queue.Empty:
+                        pass
+
+                # Check flush conditions
                 current_time = time.time()
                 should_flush = (
                     len(buffer) >= self.buffer_size or
                     (current_time - last_flush_time) >= self.flush_interval or
-                    self._flush_event.is_set()
+                    self._flush_event.is_set() or
+                    entries_processed > 0  # Flush if we processed any entries
                 )
 
                 if should_flush and buffer:
@@ -281,46 +331,48 @@ class AsyncBufferedWriter:
                     last_flush_time = current_time
                     self._flush_event.clear()
 
+                # Sleep only if no work done
+                if entries_processed == 0:
+                    time.sleep(0.01)  # Reduced sleep for better responsiveness
+
             except Exception as e:
                 print(f"Background writer error: {e}")
 
     def _flush_buffer_to_file(self, buffer: List[str]):
-        """Flush buffer to file with thread-safe locking using efficient append operations."""
+        """Flush buffer to file with optimized file locking and atomic operations."""
         if not buffer:
             return
 
         try:
-            with self._lock:  # Thread synchronization for file operations
-                # First check if file exists and has the section header
-                file_exists = os.path.exists(self.file_path)
-                section_exists = False
-
-                if file_exists:
-                    with open(self.file_path, 'r') as f:
-                        content = f.read()
-                        section_exists = '# Development & Debug Commands' in content
-
-                # Use append mode for efficient incremental updates
+            # Use file locking with proper thread synchronization for atomic operations
+            with self._lock:
                 with open(self.file_path, 'a') as f:
                     self.locker.lock_file(f)
 
-                    # Add section header if file is new or doesn't have it
-                    if not file_exists or not section_exists:
-                        if file_exists:
-                            f.write('\n')
+                    # Check for section header efficiently (read only end of file)
+                    file_size = f.tell()
+                    if file_size == 0:
+                        # New file
                         f.write('# Development & Debug Commands\n')
+                    else:
+                        # Check if section exists by reading last portion
+                        f.seek(max(0, file_size - 200))  # Read last 200 chars
+                        tail_content = f.read()
+                        if '# Development & Debug Commands' not in tail_content:
+                            f.seek(file_size)  # Go back to end
+                            f.write('\n# Development & Debug Commands\n')
 
-                    # Append all buffered entries at the end of the section
-                    for entry in buffer:
-                        f.write(entry)
+                    # Write all entries atomically
+                    f.writelines(buffer)
 
         except Exception as e:
             print(f"Failed to flush buffered entries: {e}")
         finally:
             try:
-                self.locker.unlock_file(open(self.file_path, 'a'))  # Need file handle for unlocking
+                with self._lock:  # Ensure thread safety during unlock
+                    self.locker.unlock_file(open(self.file_path, 'a'))
             except:
-                pass  # File handle will be closed by context manager
+                pass
 
     def _immediate_write(self, entry: str):
         """Immediate synchronous write when queue is full."""
@@ -341,22 +393,39 @@ class CommandFailureTracker:
         self.limit_reached = False
         # Initialize buffered writer for optimized I/O
         self.buffered_writer = AsyncBufferedWriter(persistent_data_file, buffer_size, flush_interval)
+        # Add thread synchronization for concurrent access
+        self._lock = threading.Lock()
+        # Add thread-local storage for per-thread tracker instances
+        self._local = threading.local()
 
     def record_success(self, successful_command):
-        if self.limit_reached:
-            self._write_debug_entry(successful_command)
-            self.limit_reached = False
-        self.consecutive_failures = 0
-        self.failed_commands = []
-        self.last_failure_context = ""
+        with self._lock:
+            if self.limit_reached:
+                self._write_debug_entry(successful_command)
+                self.limit_reached = False
+            self.consecutive_failures = 0
+            self.failed_commands = []
+            self.last_failure_context = ""
 
     def record_failure(self, command, context=""):
-        self.consecutive_failures += 1
-        self.failed_commands.append(command)
-        self.last_failure_context = context
-        if self.consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
-            self.limit_reached = True
-            raise CommandFailureLimitExceeded(f"Consecutive command failures reached {self.MAX_CONSECUTIVE_FAILURES}")
+        with self._lock:
+            self.consecutive_failures += 1
+            self.failed_commands.append(command)
+            self.last_failure_context = context
+            if self.consecutive_failures >= self.MAX_CONSECUTIVE_FAILURES:
+                self.limit_reached = True
+                raise CommandFailureLimitExceeded(f"Consecutive command failures reached {self.MAX_CONSECUTIVE_FAILURES}")
+
+    def get_thread_local_tracker(self):
+        """Get a thread-local instance of CommandFailureTracker for per-thread isolation."""
+        if not hasattr(self._local, 'tracker'):
+            # Create a thread-local tracker instance
+            self._local.tracker = CommandFailureTracker(
+                persistent_data_file=self.persistent_data_file,
+                buffer_size=self.buffered_writer.buffer_size,
+                flush_interval=self.buffered_writer.flush_interval
+            )
+        return self._local.tracker
 
     def _write_debug_entry(self, successful_command):
         """
@@ -425,4 +494,26 @@ def execute_command_with_tracking(command, tracker, context="", shell=False, tim
     except Exception as e:
         tracker.record_failure(command if isinstance(command, str) else ' '.join(command), context + f" (exception: {e})")
         return None, str(e)
+
+
+def execute_command_with_tracking_thread_safe(command, tracker, context="", shell=False, timeout=30):
+    """
+    Thread-safe version of execute_command_with_tracking using thread-local trackers.
+
+    Args:
+        command: Command to execute (string or list)
+        tracker: CommandFailureTracker instance (main shared tracker)
+        context: Context for failure logging
+        shell: Whether to use shell execution
+        timeout: Command timeout in seconds
+
+    Returns:
+        tuple: (stdout, stderr) on success, (None, stderr) on failure
+
+    Raises:
+        CommandFailureLimitExceeded: When consecutive failures reach limit
+    """
+    # Get thread-local tracker instance for isolation
+    local_tracker = tracker.get_thread_local_tracker()
+    return execute_command_with_tracking(command, local_tracker, context, shell, timeout)
 BufferedWriter = AsyncBufferedWriter

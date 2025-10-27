@@ -1,48 +1,48 @@
 {
-  "timestamp": 1761593506.2021313,
+  "timestamp": 1761607093.5654912,
   "latency_analysis": {
     "record_failure": {
       "count": 6667,
-      "avg_ms": 0.0005792710364486903,
+      "avg_ms": 0.0006696865156744023,
       "median_ms": 0.0005000000000143778,
-      "p95_ms": 0.0008000000000230045,
-      "p99_ms": 0.00109999999997612,
-      "min_ms": 0.00029999999995311555,
-      "max_ms": 0.036599999999997745
+      "p95_ms": 0.0011000000000038757,
+      "p99_ms": 0.001599999999990498,
+      "min_ms": 0.0003999999999837467,
+      "max_ms": 0.02749999999998587
     },
     "record_success": {
       "count": 10000,
-      "avg_ms": 0.0003067900000001178,
-      "median_ms": 0.0003000000000086267,
-      "p95_ms": 0.0004999999999588667,
-      "p99_ms": 0.0006000000000172534,
-      "min_ms": 0.00019999999995023998,
-      "max_ms": 0.01830000000002663
+      "avg_ms": 0.0004491499999998816,
+      "median_ms": 0.00040000000001150227,
+      "p95_ms": 0.0006000000000172534,
+      "p99_ms": 0.0008999999999981245,
+      "min_ms": 0.0002999999999808711,
+      "max_ms": 0.01580000000001025
     },
     "persistent_write": {
       "count": 100,
-      "avg_ms": 0.7142659999999967,
-      "median_ms": 0.010200000000015752,
-      "p95_ms": 3.2293999999999934,
-      "p99_ms": 17.3875,
-      "min_ms": 0.005199999999982996,
-      "max_ms": 17.3875
+      "avg_ms": 0.014144999999997077,
+      "median_ms": 0.008449999999993185,
+      "p95_ms": 0.01880000000001325,
+      "p99_ms": 0.37890000000001534,
+      "min_ms": 0.00780000000000225,
+      "max_ms": 0.37890000000001534
     }
   },
   "memory_analysis": {
     "initial_memory_mb": 0.0,
-    "avg_peak_memory_mb": 0.03957145690917969,
-    "max_peak_memory_mb": 0.06187152862548828,
-    "avg_growth_per_write_mb": 0.03898521423339844,
+    "avg_peak_memory_mb": 0.037324047088623045,
+    "max_peak_memory_mb": 0.053015708923339844,
+    "avg_growth_per_write_mb": 0.03695343971252441,
     "memory_efficiency": "Good"
   },
   "concurrency_analysis": {
-    "thread_capacity": 0,
-    "max_throughput_ops_sec": 0.0,
-    "optimal_threads": 1,
-    "avg_latency_at_peak_ms": 0.0,
-    "error_rate_at_peak": 1.0,
-    "scalability": "Needs optimization"
+    "thread_capacity": 16,
+    "max_throughput_ops_sec": 688.1037697550395,
+    "optimal_threads": 11,
+    "avg_latency_at_peak_ms": 19.41737136363635,
+    "error_rate_at_peak": 0.0,
+    "scalability": "Good"
   },
   "resilience_analysis": {
     "degradation_threshold": 0.9,
@@ -52,7 +52,7 @@
   },
   "summary": {
     "total_operations_tested": 16767,
-    "benchmark_duration_sec": 27.38387966156006,
+    "benchmark_duration_sec": 10.258600950241089,
     "system_info": {
       "python_version": "3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:37:50) [MSC v.1916 64 bit (AMD64)]",
       "cpu_count": 12,
