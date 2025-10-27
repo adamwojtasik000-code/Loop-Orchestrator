@@ -7,6 +7,13 @@
 - **Response Parsing**: Remove unwanted tags from external responses
 - **Dynamic Dependency Management**: Auto-install missing packages via subprocess during startup
 
+## TODO Integration Patterns
+- **Task Management Centralization**: TODO.md serves as the central component for task tracking, workflow orchestration, and developer checklists
+- **Checklist-Driven Development**: Maintain developer-focused checklists with small, actionable items and checkbox progress tracking
+- **Time Tracking Enforcement**: Implement runtime limits (default 3600s) for tasks with automated checks and enforcement mechanisms
+- **Priority-Based Task Organization**: Structure tasks by priority levels (high, implementation) with clear acceptance criteria
+- **Command Documentation in Tasks**: Include specific commands, notes, and deliverables directly in task descriptions for actionable workflows
+
 ## System Architecture Patterns
 - **UI Logic Integration**: Processing logic embedded in UI event loop despite separation attempts
 - **Filesystem-Based State**: Runtime files replace database despite backend availability
@@ -39,6 +46,13 @@
 - **Multi-Level Recovery Strategies**: Implement recovery procedures with rollback and mode-switching capabilities
 - **Complex Multi-Mode Recovery**: Multi-mode recovery with rollback capabilities
 
+## TODO Integration Workflows
+- **Task Creation Workflow**: Add new development tasks to TODO.md with specific action items, acceptance criteria, and deliverable descriptions
+- **Progress Tracking Workflow**: Update task status using checkboxes, include completion notes and executed commands for transparency
+- **Timeout Audit Workflow**: Search repository for timeout configurations (timeout, max_time fields), compile list of tasks needing timeout adjustments or justifications
+- **Runtime Enforcement Workflow**: Implement orchestrator guards that monitor task execution time, failing or warning when exceeding 3600s default unless explicitly exempted
+- **CI Integration Workflow**: Add automated CI checks that scan configuration files for timeout values exceeding 3600s, providing warnings or failures with review exemption options
+
 # Development & Debug Commands
 
 ## Common Commands
@@ -47,6 +61,11 @@
 
 ## Critical Command Patterns
 - **Parallel Execution Strategies**: Use custom parallel execution for testing with process limits
+
+## TODO Management Commands
+- **Timeout Audit Command**: grep -r "timeout\|max_time" . --include="*.py" --include="*.yaml" --include="*.json" to identify timeout configurations across the repository
+- **Runtime Enforcement Command**: Implement a monitoring hook in orchestrator that tracks task start/end times and compares against configured max runtime limits
+- **CI Check Command**: Add a CI script that validates timeout values in configuration files, failing builds with values >3600s unless marked with exemption flags
 
 # System Updates & Status
 
@@ -86,3 +105,31 @@
 - Command: Generated task ID 56bf2dbd and appended start entry to task_timing.tsv
 - Achievement: Task tracking started with status 'started'
 - Insight: Time tracking system initialized for current system initialization implementation session
+
+## [2025-10-27T18:18:39.799Z] [time-tracking] - [completion]
+- Finding: Completed time tracking for system initialization implementation task
+- Command: Updated task_timing.tsv with end time 2025-10-27T18:18:10.648Z, calculated duration 26766 seconds, marked status as completed
+- Achievement: Task 56bf2dbd successfully closed with completion status
+- Insight: System initialization implementation session completed in 26766 seconds (approximately 7 hours 26 minutes), demonstrating comprehensive task tracking implementation
+[2025-10-27T18:28:59.026Z] [optimization-memory] - [rewrite]: Rewrote persistent-memory.md to integrate TODO.md as central task management component, added TODO integration patterns and workflows, aligned all procedures with TODO.md-centric operations
+## [2025-10-27T18:30:18.263Z] [implementation-core] - [task_delegation]
+- Finding: Delegated workflow-guide.md rewrite to implementation-features mode with comprehensive TODO.md integration requirements
+- Command: Spawned new_task in implementation-features mode for workflow guide rewrite
+- Achievement: Successfully initiated feature implementation task for TODO.md workflow integration
+- Insight: Delegation ensures specialized mode handles complex documentation rewrite with TODO-centric focus
+## [2025-10-27T18:33:54.929Z] [implementation-core] - [completion_verification]
+- Finding: Verified workflow-guide.md rewrite completed successfully, integrating TODO.md as central task management
+- Command: Read rewritten workflow-guide.md, confirmed TODO-driven stages and checklist protocols implemented
+- Achievement: Workflow guide now centers on TODO.md with checklist-based execution and time enforcement
+- Insight: All procedural guidance now aligns with TODO.md-centric operations as required
+## [2025-10-27T18:33:39.471Z] [implementation-features] - [rewrite]
+- Finding: Rewrote workflow-guide.md to integrate TODO.md as central task management mechanism, emphasizing checklist-based execution with priority levels and time enforcement
+- Command: Multiple apply_diff operations to restructure document around TODO.md centrality
+- Achievement: Successfully transformed workflow-guide.md into TODO-driven guide with checklist protocols, stage-by-stage checklists, and updated all procedural guidance
+- Insight: Document now centers on TODO.md as primary management tool, with clear acceptance criteria, time limits, and progress tracking integration
+
+## [2025-10-27T18:39:15.882Z] [debug] - [timeout_enforcement_audit]
+- Finding: Completed timeout enforcement audit with no current config violations, one historical task exceeding 3600s limit (26766s), runtime guard implemented with warnings and failure mechanisms
+- Command: Audited task definitions, analyzed historical data, implemented orchestrator runtime enforcement, updated documentation
+- Achievement: Time tracking timeout enforcement implemented with 3600s limit, automated checks and runtime guards operational
+- Insight: System now enforces 3600s default timeout with warnings for exceedances and failures for violations unless explicitly exempted
