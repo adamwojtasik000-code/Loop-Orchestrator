@@ -1,0 +1,188 @@
+# Spherical Thought Graph System - Requirements Specification
+
+## 1. Executive Summary
+
+The Spherical Thought Graph System represents a major architectural evolution for the Loop Orchestrator, introducing 3D thought organization through spherical coordinates. This system will transform how ideas are represented, connected, and evolved within the orchestrator framework, leveraging existing components like TimeoutEnforcer, CommandFailureTracker, persistent-memory.md, mode system, and TODO.md for robust implementation.
+
+## 2. Functional Requirements
+
+### 2.1 Core Graph Management
+- **STG-001**: Implement spherical coordinate system for nodes with azimuth (θ), elevation (φ), and radius (r) attributes
+- **STG-002**: Create graph data structure supporting nodes (thoughts with content/metadata) and weighted edges (relationships)
+- **STG-003**: Provide fast graph traversal and mutation operations for real-time performance
+- **STG-004**: Support node activation based on temporal vectors (timestamps, frequency, priority)
+- **STG-005**: Enable parallel and speculative node execution with dependency rule validation
+
+### 2.2 Transformation Operations
+- **STG-006**: Implement aggregate operation to merge multiple thoughts into single node
+- **STG-007**: Develop refine operation for updating/improving node content based on feedback/context
+- **STG-008**: Create generate operation for producing new ideas/branches from source nodes
+- **STG-009**: Model all transformations as atomic graph operations with rollback capability
+
+### 2.3 Orchestration and Planning
+- **STG-010**: Build real-time orchestration logic evaluating node activation based on graph state and resource constraints
+- **STG-011**: Implement hierarchical planning system (abstract goals → navigation → execution steps)
+- **STG-012**: Add epistemic goal-tracking for context awareness and proactive graph activation
+- **STG-013**: Enable pruning of non-contributory branches and expansion of valuable exploration paths
+
+### 2.4 Visualization and Interaction
+- **STG-014**: Develop 3D graphical interface rendering spherical graph with nodes, relationships, and activation status
+- **STG-015**: Provide interactive features: sphere rotation, node selection, active region visualization, transformation observation
+- **STG-016**: Support real-time updates showing dynamic graph state changes
+
+### 2.5 Data Persistence and Management
+- **STG-017**: Implement graph persistence with periodic snapshots and incremental delta compression
+- **STG-018**: Enable graph state distribution across multiple systems for scalability and reliability
+- **STG-019**: Migrate existing persistent memory and workflow content to graph nodes with semantic connections
+- **STG-020**: Integrate schedule logic with node activation timing using temporal vectors
+
+### 2.6 API and Integration
+- **STG-021**: Design RESTful/GraphQL API for programmatic graph operations and queries
+- **STG-022**: Support real-time updates via WebSocket for live graph monitoring
+- **STG-023**: Enable external system integration through standardized graph operation interfaces
+
+### 2.7 Optimization and Maintenance
+- **STG-024**: Implement graph algorithms for calculating attention scores (important nodes/paths)
+- **STG-025**: Add compression routines for inactive graph regions to optimize memory usage
+- **STG-026**: Develop load balancing algorithms for distributing computation across available resources
+
+## 3. Non-Functional Requirements
+
+### 3.1 Performance
+- **STG-NF-001**: Graph traversal operations must complete within 100ms for graphs up to 10,000 nodes
+- **STG-NF-002**: Real-time visualization updates at minimum 30 FPS for interactive exploration
+- **STG-NF-003**: Node activation/deactivation operations under 50ms for responsive orchestration
+- **STG-NF-004**: API query response times under 200ms for 95th percentile with 1,000 concurrent users
+
+### 3.2 Scalability
+- **STG-NF-005**: Support minimum 100,000 nodes and 500,000 edges in single graph instance
+- **STG-NF-006**: Horizontal scaling across multiple system instances with automatic load distribution
+- **STG-NF-007**: Memory usage growth bounded at O(n log n) where n is active node count
+- **STG-NF-008**: Concurrent node operations support for minimum 100 parallel transformations
+
+### 3.3 Reliability
+- **STG-NF-009**: Graph state consistency maintained across system failures with automatic recovery
+- **STG-NF-010**: Zero data loss for committed graph operations with ACID transaction semantics
+- **STG-NF-011**: 99.9% uptime for graph services with automatic failover mechanisms
+- **STG-NF-012**: Corruption detection and repair mechanisms for persistent graph storage
+
+### 3.4 Usability
+- **STG-NF-013**: Intuitive 3D navigation with standard mouse/keyboard controls and gesture support
+- **STG-NF-014**: Search and filtering capabilities for locating nodes within large graphs
+- **STG-NF-015**: Progressive disclosure of node details to manage information complexity
+- **STG-NF-016**: Context-sensitive help and guided tours for new users
+
+### 3.5 Security
+- **STG-NF-017**: Encrypted graph data storage with configurable access control policies
+- **STG-NF-018**: Input validation and sanitization for all graph operation APIs
+- **STG-NF-019**: Audit logging for all graph modifications with user attribution
+- **STG-NF-020**: Secure communication channels for distributed graph operations
+
+### 3.6 Compatibility
+- **STG-NF-021**: Backward compatibility with existing persistent-memory.md content migration
+- **STG-NF-022**: Cross-platform support (Windows, Linux, macOS) for visualization components
+- **STG-NF-023**: API versioning with deprecation notices for breaking changes
+- **STG-NF-024**: Integration compatibility with existing orchestrator components
+
+## 4. Dependencies
+
+### 4.1 External Libraries
+- **Python 3.8+** with typing support for coordinate system implementation
+- **NumPy** for efficient spherical coordinate calculations and vector operations
+- **NetworkX** or custom graph library for graph data structure and algorithms
+- **WebGL-based 3D rendering library** (Three.js or similar) for visualization
+- **FastAPI** or Flask for RESTful API implementation
+- **WebSocket library** for real-time updates (websockets or socket.io)
+- **AsyncIO** for concurrent graph operations and parallel execution
+
+### 4.2 System Components
+- **TimeoutEnforcer**: Integration for graph operation timeouts (coordinate with existing 3600s default)
+- **CommandFailureTracker**: Error handling for graph transformation failures with recovery protocols
+- **Persistent Memory**: Graph state persistence and migration of existing content
+- **Mode System**: Specialized modes for graph operations (planning, execution, visualization)
+- **TODO.md**: Task management for graph development and evolution workflows
+
+### 4.3 Infrastructure Requirements
+- **Database**: High-performance storage for graph persistence (PostgreSQL with PostGIS or Neo4j)
+- **Cache Layer**: Redis or similar for frequently accessed graph regions and optimization data
+- **Message Queue**: RabbitMQ or similar for distributed graph operation coordination
+- **Load Balancer**: Nginx or similar for API scaling and distribution
+
+## 5. Architectural Constraints
+
+### 5.1 Design Principles
+- **Spherical Geometry**: All spatial calculations must respect spherical coordinate system properties
+- **Immutable Operations**: Graph transformations as pure functions with clear input/output contracts
+- **Event-Driven Architecture**: Node activations triggered by temporal and relational events
+- **Hierarchical Decomposition**: Planning broken into abstract/concrete layers with clear boundaries
+
+### 5.2 Integration Constraints
+- **Mode System Compatibility**: Graph operations must integrate with existing mode delegation patterns
+- **TODO-Driven Development**: All graph features must originate from TODO.md checklist items
+- **Time Enforcement**: Graph operation timeouts must respect 3600s default with explicit exemptions
+- **Persistent Memory Limits**: Graph metadata must comply with 300-line limit and 3-section structure
+
+### 5.3 Performance Constraints
+- **Memory Bounds**: Active graph regions limited to available system memory with compression fallbacks
+- **Computation Distribution**: Graph algorithms must support parallel execution across CPU cores
+- **Network Efficiency**: Distributed operations minimize data transfer through delta compression
+- **Resource Awareness**: Graph operations adapt to available computational resources dynamically
+
+### 5.4 Data Integrity Constraints
+- **Atomic Operations**: All graph mutations must be atomic with rollback capability on failure
+- **Consistency Guarantees**: Graph state consistency across distributed instances with conflict resolution
+- **Audit Trail**: Complete operation history for debugging and compliance requirements
+- **Backup/Recovery**: Point-in-time recovery capability for graph state restoration
+
+## 6. Component Mapping to Existing Systems
+
+### 6.1 TimeoutEnforcer Integration
+- **Timing Control**: Graph operation timeouts with 3600s default enforcement
+- **Warning Systems**: Progress alerts for long-running graph transformations
+- **Opt-out Mechanisms**: Explicit exemptions for complex graph algorithms exceeding time limits
+
+### 6.2 CommandFailureTracker Integration
+- **Transformation Reliability**: Failure tracking for graph operations with automatic retry logic
+- **Debug Entry Creation**: Failure context logging to persistent-memory.md for troubleshooting
+- **Recovery Protocols**: Success-triggered reset of failure counters after successful transformations
+
+### 6.3 Persistent Memory Integration
+- **State Storage**: Graph snapshots and operation history stored in system updates section
+- **Migration Support**: Existing memory patterns converted to graph nodes with semantic connections
+- **Integrity Maintenance**: Graph operations respect 300-line limit and 3-section structure requirements
+
+### 6.4 Mode System Integration
+- **Task Delegation**: Specialized modes for graph operations (creation, transformation, visualization)
+- **Workflow Orchestration**: Mode spawning for complex graph development tasks
+- **Context Preservation**: Graph state passed between mode operations with full context
+
+### 6.5 TODO.md Integration
+- **Goal Management**: Graph development tasks managed through TODO.md checklist system
+- **Priority Organization**: Graph features prioritized according to TODO.md priority levels
+- **Progress Tracking**: Graph implementation progress tracked via checkbox completion system
+
+## 7. Success Criteria
+
+### 7.1 Functional Completeness
+- All 26 functional requirements implemented and tested
+- Graph operations maintain data consistency across distributed instances
+- Visualization provides intuitive 3D exploration of complex thought relationships
+- API supports comprehensive programmatic graph manipulation
+
+### 7.2 Performance Targets
+- Sub-100ms response times for graph operations under typical loads
+- Real-time visualization performance sustaining 30+ FPS
+- Scalability to 100K+ nodes with acceptable performance degradation
+- Memory usage optimized for large graph persistence
+
+### 7.3 Quality Assurance
+- Comprehensive test coverage for graph algorithms and transformations
+- Benchmark suite validating performance targets across scaling scenarios
+- Documentation covering architecture, APIs, and usage patterns
+- User acceptance testing validating 3D thought organization capabilities
+
+### 7.4 Integration Validation
+- Seamless migration of existing persistent memory to graph nodes
+- Full compatibility with existing orchestrator components and workflows
+- Successful delegation of graph operations through mode system
+- Compliance with TODO.md-driven development and time enforcement protocols

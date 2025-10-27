@@ -1,0 +1,6 @@
+# Non-Obvious Implementation Patterns
+
+# Development & Debug Commands
+
+- **Command Failure Recovery**: Context: context_0, Failed commands: ['fail_cmd_0_0', 'fail_cmd_0_1', 'fail_cmd_0_2'], Successful command: success_cmd_0
+# System Updates & Status

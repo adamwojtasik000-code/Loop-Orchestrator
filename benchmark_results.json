@@ -1,0 +1,62 @@
+{
+  "timestamp": 1761593506.2021313,
+  "latency_analysis": {
+    "record_failure": {
+      "count": 6667,
+      "avg_ms": 0.0005792710364486903,
+      "median_ms": 0.0005000000000143778,
+      "p95_ms": 0.0008000000000230045,
+      "p99_ms": 0.00109999999997612,
+      "min_ms": 0.00029999999995311555,
+      "max_ms": 0.036599999999997745
+    },
+    "record_success": {
+      "count": 10000,
+      "avg_ms": 0.0003067900000001178,
+      "median_ms": 0.0003000000000086267,
+      "p95_ms": 0.0004999999999588667,
+      "p99_ms": 0.0006000000000172534,
+      "min_ms": 0.00019999999995023998,
+      "max_ms": 0.01830000000002663
+    },
+    "persistent_write": {
+      "count": 100,
+      "avg_ms": 0.7142659999999967,
+      "median_ms": 0.010200000000015752,
+      "p95_ms": 3.2293999999999934,
+      "p99_ms": 17.3875,
+      "min_ms": 0.005199999999982996,
+      "max_ms": 17.3875
+    }
+  },
+  "memory_analysis": {
+    "initial_memory_mb": 0.0,
+    "avg_peak_memory_mb": 0.03957145690917969,
+    "max_peak_memory_mb": 0.06187152862548828,
+    "avg_growth_per_write_mb": 0.03898521423339844,
+    "memory_efficiency": "Good"
+  },
+  "concurrency_analysis": {
+    "thread_capacity": 0,
+    "max_throughput_ops_sec": 0.0,
+    "optimal_threads": 1,
+    "avg_latency_at_peak_ms": 0.0,
+    "error_rate_at_peak": 1.0,
+    "scalability": "Needs optimization"
+  },
+  "resilience_analysis": {
+    "degradation_threshold": 0.9,
+    "max_failure_rate_handled": 0.5,
+    "recovery_events_total": 832,
+    "resilience_rating": "Excellent"
+  },
+  "summary": {
+    "total_operations_tested": 16767,
+    "benchmark_duration_sec": 27.38387966156006,
+    "system_info": {
+      "python_version": "3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:37:50) [MSC v.1916 64 bit (AMD64)]",
+      "cpu_count": 12,
+      "platform": "win32"
+    }
+  }
+}

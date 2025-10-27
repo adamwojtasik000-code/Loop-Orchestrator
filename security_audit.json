@@ -1,0 +1,12 @@
+{
+  "isolation_measures": [
+    "environment_variable_sanitization",
+    "path_isolation",
+    "permission_restrictions",
+    "dependency_verification"
+  ],
+  "venv_path": "venv_py38_test",
+  "created_at": "Test timestamp",
+  "python_version": "3.8.0 (tags/v3.8.0:fa919fd, Oct 14 2019, 19:37:50) [MSC v.1916 64 bit (AMD64)]",
+  "security_hash": "83e7aa7c5caf0330bf81cfd3314cba58a7cd99de96b1d5b8ef4ea009aee1636d"
+}

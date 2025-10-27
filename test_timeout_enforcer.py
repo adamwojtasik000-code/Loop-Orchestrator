@@ -81,7 +81,6 @@ class TestTimeoutEnforcer(unittest.TestCase):
         """Test enforcement mechanism at timeout limit."""
         self.enforcer.start_task("test_task")
         start_time = 1000000000.0
-        mock_time.return_value = start_time
 
         # At timeout limit (3600s later) - need to set the mock properly
         mock_time.return_value = start_time + 3600.1
@@ -103,7 +102,6 @@ class TestTimeoutEnforcer(unittest.TestCase):
         self.enforcer.set_opt_out(True)
         self.enforcer.start_task("test_task")
         start_time = 1000000000.0
-        mock_time.return_value = start_time
 
         # At timeout limit with opt-out - need to set the mock properly
         mock_time.return_value = start_time + 3600.1
