@@ -38,6 +38,10 @@ This file is a developer-focused checklist for short-term work on the Loop Orche
 	- Completed: Benchmarks show 11 thread capacity, 572 ops/sec throughput, 0% error rate with "Good" scalability rating
 
 - [ ] Python based mcp server with full integration of roocode project.
+  - **BLOCKED**: MCP SDK requires Python 3.10+ but system uses Python 3.8.0
+  - **Status**: High priority external integration opportunity blocked by Python version incompatibility
+  - **Next Steps**: Upgrade to Python 3.10+ to enable MCP server development
+- [ ] Python based mcp server with full integration of roocode project.
 
 - **Implement spherical coordinates system for thoughts**
   Build functions/classes to represent nodes (thoughts) in spherical space—each node should have attributes for azimuth (theta), elevation (phi), and radius. This will be the basis for visually and structurally organizing ideas in 3D.

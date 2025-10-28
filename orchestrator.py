@@ -9,6 +9,7 @@ except ImportError:
 import time
 import threading
 import subprocess
+import sys
 try:
     from typing import Callable, Any, Optional, Tuple
 except ImportError:
@@ -378,6 +379,26 @@ class AsyncBufferedWriter:
         """Immediate synchronous write when queue is full."""
         buffer = [entry]
         self._flush_buffer_to_file(buffer)
+
+
+def start_mcp_server_if_available():
+    """
+    Start MCP server if Python version and dependencies allow it.
+    This provides seamless integration for external tools.
+    """
+    if sys.version_info >= (3, 10):
+        try:
+            # Try to start MCP server in background
+            from orchestrator_integration import start_mcp_server_background
+            process = start_mcp_server_background()
+            print(f"MCP server started in background (PID: {process.pid})")
+            return process
+        except Exception as e:
+            print(f"Failed to start MCP server: {e}")
+            return None
+    else:
+        print("MCP server requires Python 3.10+. Using fallback integration.")
+        return None
 
 
 # Backward compatibility alias
