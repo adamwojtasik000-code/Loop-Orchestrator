@@ -5,7 +5,7 @@
     "failed_tests": 3,
     "partial_tests": 0,
     "success_rate": "89.3%",
-    "timestamp": 1761971373.5357223
+    "timestamp": 1761973742.7430646
   },
   "categories": {
     "Orchestrator": {
@@ -18,64 +18,64 @@
           "category": "Orchestrator",
           "status": "PASS",
           "details": "Found 0 schedules",
-          "duration": 0.045993804931640625,
-          "timestamp": 1761971370.2098835
+          "duration": 0.021280527114868164,
+          "timestamp": 1761973740.5039113
         },
         {
           "test_name": "manage_schedules_create",
           "category": "Orchestrator",
           "status": "PASS",
           "details": "Created schedule: N/A",
-          "duration": 0.2214658260345459,
-          "timestamp": 1761971370.4390368
+          "duration": 0.016987323760986328,
+          "timestamp": 1761973740.523696
         },
         {
           "test_name": "track_task_time",
           "category": "Orchestrator",
           "status": "PASS",
           "details": "Time tracking started: False",
-          "duration": 0.003477811813354492,
-          "timestamp": 1761971370.4479575
+          "duration": 0.001791238784790039,
+          "timestamp": 1761973740.5283947
         },
         {
           "test_name": "get_time_tracking",
           "category": "Orchestrator",
           "status": "PASS",
           "details": "Found 0 records",
-          "duration": 0.007065534591674805,
-          "timestamp": 1761971370.4683833
+          "duration": 0.002768993377685547,
+          "timestamp": 1761973740.5340385
         },
         {
           "test_name": "get_persistent_memory",
           "category": "Orchestrator",
           "status": "PASS",
           "details": "Found 3 sections",
-          "duration": 0.0009000301361083984,
-          "timestamp": 1761971370.4770844
+          "duration": 0.0004992485046386719,
+          "timestamp": 1761973740.537235
         },
         {
           "test_name": "update_persistent_memory",
           "category": "Orchestrator",
           "status": "PASS",
           "details": "Entry added at line: N/A",
-          "duration": 0.01496124267578125,
-          "timestamp": 1761971370.5005996
+          "duration": 0.004881381988525391,
+          "timestamp": 1761973740.544906
         },
         {
           "test_name": "get_todo_status",
           "category": "Orchestrator",
           "status": "PASS",
-          "details": "Found 19 TODO items",
-          "duration": 0.00054931640625,
-          "timestamp": 1761971370.5112467
+          "details": "Found 18 TODO items",
+          "duration": 0.0004820823669433594,
+          "timestamp": 1761973740.5488622
         },
         {
           "test_name": "delegate_task",
           "category": "Orchestrator",
           "status": "PASS",
           "details": "Delegated to mode: N/A",
-          "duration": 0.011380195617675781,
-          "timestamp": 1761971370.5289378
+          "duration": 0.00553441047668457,
+          "timestamp": 1761973740.558545
         }
       ]
     },
@@ -88,49 +88,49 @@
           "test_name": "read_project_file",
           "category": "File System",
           "status": "PASS",
-          "details": "Read 10193 characters",
-          "duration": 0.000240325927734375,
-          "timestamp": 1761971370.5378394
+          "details": "Read 15260 characters",
+          "duration": 0.000194549560546875,
+          "timestamp": 1761973740.5628092
         },
         {
           "test_name": "list_project_structure",
           "category": "File System",
           "status": "PASS",
           "details": "Found 0 items",
-          "duration": 0.0027933120727539062,
-          "timestamp": 1761971370.8685927
+          "duration": 0.00118255615234375,
+          "timestamp": 1761973740.5667744
         },
         {
           "test_name": "search_in_files",
           "category": "File System",
           "status": "PASS",
           "details": "Found 5 matches",
-          "duration": 0.0033600330352783203,
-          "timestamp": 1761971370.8762357
+          "duration": 0.002064943313598633,
+          "timestamp": 1761973740.5715363
         },
         {
           "test_name": "write_project_file",
           "category": "File System",
           "status": "PASS",
           "details": "File written: True",
-          "duration": 0.0009169578552246094,
-          "timestamp": 1761971370.8855739
+          "duration": 0.00026226043701171875,
+          "timestamp": 1761973740.5744493
         },
         {
           "test_name": "backup_file",
           "category": "File System",
           "status": "PASS",
           "details": "Backup created: True",
-          "duration": 0.005562782287597656,
-          "timestamp": 1761971370.899851
+          "duration": 0.0029914379119873047,
+          "timestamp": 1761973740.5803435
         },
         {
           "test_name": "restore_file",
           "category": "File System",
           "status": "PASS",
           "details": "Restore successful: True",
-          "duration": 0.0072405338287353516,
-          "timestamp": 1761971370.9100773
+          "duration": 0.003324270248413086,
+          "timestamp": 1761973740.586362
         }
       ]
     },
@@ -144,48 +144,48 @@
           "category": "Development",
           "status": "PASS",
           "details": "Status: unknown",
-          "duration": 1.027359962463379,
-          "timestamp": 1761971371.9455802
+          "duration": 1.0220446586608887,
+          "timestamp": 1761973741.6124978
         },
         {
           "test_name": "get_mode_capabilities",
           "category": "Development",
           "status": "PASS",
           "details": "Found 0 modes",
-          "duration": 0.003865480422973633,
-          "timestamp": 1761971371.9526176
+          "duration": 0.0020444393157958984,
+          "timestamp": 1761973741.6173139
         },
         {
           "test_name": "switch_mode",
           "category": "Development",
           "status": "PASS",
           "details": "Mode switched to: N/A",
-          "duration": 0.0033156871795654297,
-          "timestamp": 1761971371.9610367
+          "duration": 0.001867055892944336,
+          "timestamp": 1761973741.6218796
         },
         {
           "test_name": "run_validation",
           "category": "Development",
           "status": "PASS",
           "details": "Validation passed: False",
-          "duration": 0.00015687942504882812,
-          "timestamp": 1761971371.966958
+          "duration": 0.0001068115234375,
+          "timestamp": 1761973741.6245866
         },
         {
           "test_name": "error_recovery",
           "category": "Development",
           "status": "PASS",
           "details": "Recovery action: none",
-          "duration": 0.1850898265838623,
-          "timestamp": 1761971372.158099
+          "duration": 0.024856090545654297,
+          "timestamp": 1761973741.6521542
         },
         {
           "test_name": "sync_environment",
           "category": "Development",
           "status": "PASS",
           "details": "Sync completed: False",
-          "duration": 1.0452027320861816,
-          "timestamp": 1761971373.216676
+          "duration": 1.0411789417266846,
+          "timestamp": 1761973742.696147
         }
       ]
     },
@@ -199,40 +199,40 @@
           "category": "Integration",
           "status": "PASS",
           "details": "Read 5885 characters",
-          "duration": 0.00029754638671875,
-          "timestamp": 1761971373.2224965
+          "duration": 0.00018405914306640625,
+          "timestamp": 1761973742.7004867
         },
         {
           "test_name": "integrate_time_tracking",
           "category": "Integration",
           "status": "PASS",
-          "details": "Read 3609 characters",
-          "duration": 0.00024080276489257812,
-          "timestamp": 1761971373.2280176
+          "details": "Read 4340 characters",
+          "duration": 0.00015616416931152344,
+          "timestamp": 1761973742.7034464
         },
         {
           "test_name": "integrate_persistent_memory",
           "category": "Integration",
           "status": "PASS",
-          "details": "Read 18083 characters",
-          "duration": 0.00039839744567871094,
-          "timestamp": 1761971373.2336838
+          "details": "Read 21029 characters",
+          "duration": 0.000152587890625,
+          "timestamp": 1761973742.7064521
         },
         {
           "test_name": "integrate_todo",
           "category": "Integration",
           "status": "PASS",
-          "details": "Read 9944 characters",
-          "duration": 0.00022745132446289062,
-          "timestamp": 1761971373.2394674
+          "details": "Read 11810 characters",
+          "duration": 0.00014138221740722656,
+          "timestamp": 1761973742.7094872
         },
         {
           "test_name": "integrate_server_files",
           "category": "Integration",
           "status": "PASS",
           "details": "Accessed 0 items",
-          "duration": 0.0006892681121826172,
-          "timestamp": 1761971373.2454386
+          "duration": 0.0004010200500488281,
+          "timestamp": 1761973742.7126734
         }
       ]
     },
@@ -246,24 +246,24 @@
           "category": "Error Handling",
           "status": "FAIL",
           "details": "Expected error but none occurred",
-          "duration": 0.00021004676818847656,
-          "timestamp": 1761971373.2539034
+          "duration": 9.989738464355469e-05,
+          "timestamp": 1761973742.7167206
         },
         {
           "test_name": "Invalid schedule ID",
           "category": "Error Handling",
           "status": "FAIL",
           "details": "Expected error but none occurred",
-          "duration": 0.028538942337036133,
-          "timestamp": 1761971373.523038
+          "duration": 0.01617288589477539,
+          "timestamp": 1761973742.7357976
         },
         {
           "test_name": "Invalid validation type",
           "category": "Error Handling",
           "status": "FAIL",
           "details": "Expected error but none occurred",
-          "duration": 9.560585021972656e-05,
-          "timestamp": 1761971373.5264878
+          "duration": 6.151199340820312e-05,
+          "timestamp": 1761973742.7388523
         }
       ]
     }
@@ -274,224 +274,224 @@
       "category": "Orchestrator",
       "status": "PASS",
       "details": "Found 0 schedules",
-      "duration": 0.045993804931640625,
-      "timestamp": 1761971370.2098835
+      "duration": 0.021280527114868164,
+      "timestamp": 1761973740.5039113
     },
     {
       "test_name": "manage_schedules_create",
       "category": "Orchestrator",
       "status": "PASS",
       "details": "Created schedule: N/A",
-      "duration": 0.2214658260345459,
-      "timestamp": 1761971370.4390368
+      "duration": 0.016987323760986328,
+      "timestamp": 1761973740.523696
     },
     {
       "test_name": "track_task_time",
       "category": "Orchestrator",
       "status": "PASS",
       "details": "Time tracking started: False",
-      "duration": 0.003477811813354492,
-      "timestamp": 1761971370.4479575
+      "duration": 0.001791238784790039,
+      "timestamp": 1761973740.5283947
     },
     {
       "test_name": "get_time_tracking",
       "category": "Orchestrator",
       "status": "PASS",
       "details": "Found 0 records",
-      "duration": 0.007065534591674805,
-      "timestamp": 1761971370.4683833
+      "duration": 0.002768993377685547,
+      "timestamp": 1761973740.5340385
     },
     {
       "test_name": "get_persistent_memory",
       "category": "Orchestrator",
       "status": "PASS",
       "details": "Found 3 sections",
-      "duration": 0.0009000301361083984,
-      "timestamp": 1761971370.4770844
+      "duration": 0.0004992485046386719,
+      "timestamp": 1761973740.537235
     },
     {
       "test_name": "update_persistent_memory",
       "category": "Orchestrator",
       "status": "PASS",
       "details": "Entry added at line: N/A",
-      "duration": 0.01496124267578125,
-      "timestamp": 1761971370.5005996
+      "duration": 0.004881381988525391,
+      "timestamp": 1761973740.544906
     },
     {
       "test_name": "get_todo_status",
       "category": "Orchestrator",
       "status": "PASS",
-      "details": "Found 19 TODO items",
-      "duration": 0.00054931640625,
-      "timestamp": 1761971370.5112467
+      "details": "Found 18 TODO items",
+      "duration": 0.0004820823669433594,
+      "timestamp": 1761973740.5488622
     },
     {
       "test_name": "delegate_task",
       "category": "Orchestrator",
       "status": "PASS",
       "details": "Delegated to mode: N/A",
-      "duration": 0.011380195617675781,
-      "timestamp": 1761971370.5289378
+      "duration": 0.00553441047668457,
+      "timestamp": 1761973740.558545
     },
     {
       "test_name": "read_project_file",
       "category": "File System",
       "status": "PASS",
-      "details": "Read 10193 characters",
-      "duration": 0.000240325927734375,
-      "timestamp": 1761971370.5378394
+      "details": "Read 15260 characters",
+      "duration": 0.000194549560546875,
+      "timestamp": 1761973740.5628092
     },
     {
       "test_name": "list_project_structure",
       "category": "File System",
       "status": "PASS",
       "details": "Found 0 items",
-      "duration": 0.0027933120727539062,
-      "timestamp": 1761971370.8685927
+      "duration": 0.00118255615234375,
+      "timestamp": 1761973740.5667744
     },
     {
       "test_name": "search_in_files",
       "category": "File System",
       "status": "PASS",
       "details": "Found 5 matches",
-      "duration": 0.0033600330352783203,
-      "timestamp": 1761971370.8762357
+      "duration": 0.002064943313598633,
+      "timestamp": 1761973740.5715363
     },
     {
       "test_name": "write_project_file",
       "category": "File System",
       "status": "PASS",
       "details": "File written: True",
-      "duration": 0.0009169578552246094,
-      "timestamp": 1761971370.8855739
+      "duration": 0.00026226043701171875,
+      "timestamp": 1761973740.5744493
     },
     {
       "test_name": "backup_file",
       "category": "File System",
       "status": "PASS",
       "details": "Backup created: True",
-      "duration": 0.005562782287597656,
-      "timestamp": 1761971370.899851
+      "duration": 0.0029914379119873047,
+      "timestamp": 1761973740.5803435
     },
     {
       "test_name": "restore_file",
       "category": "File System",
       "status": "PASS",
       "details": "Restore successful: True",
-      "duration": 0.0072405338287353516,
-      "timestamp": 1761971370.9100773
+      "duration": 0.003324270248413086,
+      "timestamp": 1761973740.586362
     },
     {
       "test_name": "get_system_status",
       "category": "Development",
       "status": "PASS",
       "details": "Status: unknown",
-      "duration": 1.027359962463379,
-      "timestamp": 1761971371.9455802
+      "duration": 1.0220446586608887,
+      "timestamp": 1761973741.6124978
     },
     {
       "test_name": "get_mode_capabilities",
       "category": "Development",
       "status": "PASS",
       "details": "Found 0 modes",
-      "duration": 0.003865480422973633,
-      "timestamp": 1761971371.9526176
+      "duration": 0.0020444393157958984,
+      "timestamp": 1761973741.6173139
     },
     {
       "test_name": "switch_mode",
       "category": "Development",
       "status": "PASS",
       "details": "Mode switched to: N/A",
-      "duration": 0.0033156871795654297,
-      "timestamp": 1761971371.9610367
+      "duration": 0.001867055892944336,
+      "timestamp": 1761973741.6218796
     },
     {
       "test_name": "run_validation",
       "category": "Development",
       "status": "PASS",
       "details": "Validation passed: False",
-      "duration": 0.00015687942504882812,
-      "timestamp": 1761971371.966958
+      "duration": 0.0001068115234375,
+      "timestamp": 1761973741.6245866
     },
     {
       "test_name": "error_recovery",
       "category": "Development",
       "status": "PASS",
       "details": "Recovery action: none",
-      "duration": 0.1850898265838623,
-      "timestamp": 1761971372.158099
+      "duration": 0.024856090545654297,
+      "timestamp": 1761973741.6521542
     },
     {
       "test_name": "sync_environment",
       "category": "Development",
       "status": "PASS",
       "details": "Sync completed: False",
-      "duration": 1.0452027320861816,
-      "timestamp": 1761971373.216676
+      "duration": 1.0411789417266846,
+      "timestamp": 1761973742.696147
     },
     {
       "test_name": "integrate_schedules",
       "category": "Integration",
       "status": "PASS",
       "details": "Read 5885 characters",
-      "duration": 0.00029754638671875,
-      "timestamp": 1761971373.2224965
+      "duration": 0.00018405914306640625,
+      "timestamp": 1761973742.7004867
     },
     {
       "test_name": "integrate_time_tracking",
       "category": "Integration",
       "status": "PASS",
-      "details": "Read 3609 characters",
-      "duration": 0.00024080276489257812,
-      "timestamp": 1761971373.2280176
+      "details": "Read 4340 characters",
+      "duration": 0.00015616416931152344,
+      "timestamp": 1761973742.7034464
     },
     {
       "test_name": "integrate_persistent_memory",
       "category": "Integration",
       "status": "PASS",
-      "details": "Read 18083 characters",
-      "duration": 0.00039839744567871094,
-      "timestamp": 1761971373.2336838
+      "details": "Read 21029 characters",
+      "duration": 0.000152587890625,
+      "timestamp": 1761973742.7064521
     },
     {
       "test_name": "integrate_todo",
       "category": "Integration",
       "status": "PASS",
-      "details": "Read 9944 characters",
-      "duration": 0.00022745132446289062,
-      "timestamp": 1761971373.2394674
+      "details": "Read 11810 characters",
+      "duration": 0.00014138221740722656,
+      "timestamp": 1761973742.7094872
     },
     {
       "test_name": "integrate_server_files",
       "category": "Integration",
       "status": "PASS",
       "details": "Accessed 0 items",
-      "duration": 0.0006892681121826172,
-      "timestamp": 1761971373.2454386
+      "duration": 0.0004010200500488281,
+      "timestamp": 1761973742.7126734
     },
     {
       "test_name": "Invalid file path",
       "category": "Error Handling",
       "status": "FAIL",
       "details": "Expected error but none occurred",
-      "duration": 0.00021004676818847656,
-      "timestamp": 1761971373.2539034
+      "duration": 9.989738464355469e-05,
+      "timestamp": 1761973742.7167206
     },
     {
       "test_name": "Invalid schedule ID",
       "category": "Error Handling",
       "status": "FAIL",
       "details": "Expected error but none occurred",
-      "duration": 0.028538942337036133,
-      "timestamp": 1761971373.523038
+      "duration": 0.01617288589477539,
+      "timestamp": 1761973742.7357976
     },
     {
       "test_name": "Invalid validation type",
       "category": "Error Handling",
       "status": "FAIL",
       "details": "Expected error but none occurred",
-      "duration": 9.560585021972656e-05,
-      "timestamp": 1761971373.5264878
+      "duration": 6.151199340820312e-05,
+      "timestamp": 1761973742.7388523
     }
   ],
   "server_config": {

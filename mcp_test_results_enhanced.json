@@ -1,0 +1,742 @@
+{
+  "summary": {
+    "total_tests": 35,
+    "passed_tests": 29,
+    "robust_tests": 6,
+    "failed_tests": 0,
+    "partial_tests": 0,
+    "success_rate": "82.9%",
+    "robustness_rate": "17.1%",
+    "total_robustness_score": 52,
+    "resilience_tests_passed": 35,
+    "resilience_rate": "100.0%",
+    "timestamp": 1761974369.5640342
+  },
+  "categories": {
+    "Orchestrator": {
+      "PASS": 8,
+      "ROBUST": 0,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "get_schedule_status",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 0 schedules",
+          "duration": 0.031036853790283203,
+          "robustness_score": 1,
+          "timestamp": 1761974363.6471536
+        },
+        {
+          "test_name": "manage_schedules_create",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Created schedule: N/A",
+          "duration": 0.23486781120300293,
+          "robustness_score": 1,
+          "timestamp": 1761974363.88634
+        },
+        {
+          "test_name": "track_task_time",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Time tracking started: False",
+          "duration": 0.00982046127319336,
+          "robustness_score": 1,
+          "timestamp": 1761974363.913119
+        },
+        {
+          "test_name": "get_time_tracking",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 0 records",
+          "duration": 0.006123542785644531,
+          "robustness_score": 1,
+          "timestamp": 1761974363.9362595
+        },
+        {
+          "test_name": "get_persistent_memory",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 3 sections",
+          "duration": 0.0005657672882080078,
+          "robustness_score": 1,
+          "timestamp": 1761974363.944091
+        },
+        {
+          "test_name": "update_persistent_memory",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Entry added at line: N/A",
+          "duration": 0.007878780364990234,
+          "robustness_score": 1,
+          "timestamp": 1761974363.9592202
+        },
+        {
+          "test_name": "get_todo_status",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 18 TODO items",
+          "duration": 0.000499725341796875,
+          "robustness_score": 1,
+          "timestamp": 1761974363.9658759
+        },
+        {
+          "test_name": "delegate_task",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Delegated to mode: N/A",
+          "duration": 0.3772604465484619,
+          "robustness_score": 1,
+          "timestamp": 1761974364.3520997
+        }
+      ]
+    },
+    "File System": {
+      "PASS": 6,
+      "ROBUST": 0,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "read_project_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Read 15566 characters",
+          "duration": 0.0004220008850097656,
+          "robustness_score": 1,
+          "timestamp": 1761974364.3619773
+        },
+        {
+          "test_name": "list_project_structure",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Found 0 items",
+          "duration": 0.0024137496948242188,
+          "robustness_score": 1,
+          "timestamp": 1761974364.3729227
+        },
+        {
+          "test_name": "search_in_files",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Found 5 matches",
+          "duration": 0.0024373531341552734,
+          "robustness_score": 1,
+          "timestamp": 1761974364.3856347
+        },
+        {
+          "test_name": "write_project_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "File written: True",
+          "duration": 0.0007016658782958984,
+          "robustness_score": 1,
+          "timestamp": 1761974364.3984554
+        },
+        {
+          "test_name": "backup_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Backup created: True",
+          "duration": 0.0032968521118164062,
+          "robustness_score": 1,
+          "timestamp": 1761974364.4082599
+        },
+        {
+          "test_name": "restore_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Restore successful: True",
+          "duration": 0.005464076995849609,
+          "robustness_score": 1,
+          "timestamp": 1761974364.4193487
+        }
+      ]
+    },
+    "Development": {
+      "PASS": 6,
+      "ROBUST": 0,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "get_system_status",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Status: unknown",
+          "duration": 1.031001091003418,
+          "robustness_score": 1,
+          "timestamp": 1761974365.4602203
+        },
+        {
+          "test_name": "get_mode_capabilities",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Found 0 modes",
+          "duration": 0.004311084747314453,
+          "robustness_score": 1,
+          "timestamp": 1761974365.4712908
+        },
+        {
+          "test_name": "switch_mode",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Mode switched to: N/A",
+          "duration": 0.004089832305908203,
+          "robustness_score": 1,
+          "timestamp": 1761974365.4856987
+        },
+        {
+          "test_name": "run_validation",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Validation passed: False",
+          "duration": 0.00016379356384277344,
+          "robustness_score": 1,
+          "timestamp": 1761974365.494321
+        },
+        {
+          "test_name": "error_recovery",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Recovery action: none",
+          "duration": 0.5196716785430908,
+          "robustness_score": 2,
+          "timestamp": 1761974366.0222363
+        },
+        {
+          "test_name": "sync_environment",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Sync completed: False",
+          "duration": 1.0484471321105957,
+          "robustness_score": 1,
+          "timestamp": 1761974367.0793214
+        }
+      ]
+    },
+    "Integration": {
+      "PASS": 5,
+      "ROBUST": 0,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "integrate_schedules",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 5885 characters",
+          "duration": 0.00030493736267089844,
+          "robustness_score": 1,
+          "timestamp": 1761974367.086395
+        },
+        {
+          "test_name": "integrate_time_tracking",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 4386 characters",
+          "duration": 0.0002579689025878906,
+          "robustness_score": 1,
+          "timestamp": 1761974367.0946372
+        },
+        {
+          "test_name": "integrate_persistent_memory",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 21029 characters",
+          "duration": 0.00026679039001464844,
+          "robustness_score": 1,
+          "timestamp": 1761974367.108726
+        },
+        {
+          "test_name": "integrate_todo",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 11810 characters",
+          "duration": 0.00029850006103515625,
+          "robustness_score": 1,
+          "timestamp": 1761974367.117898
+        },
+        {
+          "test_name": "integrate_server_files",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Accessed 0 items",
+          "duration": 0.0008182525634765625,
+          "robustness_score": 1,
+          "timestamp": 1761974367.1272855
+        }
+      ]
+    },
+    "Enhanced Error Handling": {
+      "PASS": 0,
+      "ROBUST": 6,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "Nonexistent file handling",
+          "category": "Enhanced Error Handling",
+          "status": "ROBUST",
+          "details": "Gracefully handled without exception",
+          "duration": 0.00022172927856445312,
+          "robustness_score": 3,
+          "timestamp": 1761974367.4784174
+        },
+        {
+          "test_name": "Invalid schedule operation",
+          "category": "Enhanced Error Handling",
+          "status": "ROBUST",
+          "details": "Gracefully handled without exception",
+          "duration": 0.12158751487731934,
+          "robustness_score": 3,
+          "timestamp": 1761974367.6255922
+        },
+        {
+          "test_name": "Invalid validation type",
+          "category": "Enhanced Error Handling",
+          "status": "ROBUST",
+          "details": "Gracefully handled without exception",
+          "duration": 0.00011229515075683594,
+          "robustness_score": 3,
+          "timestamp": 1761974367.6528854
+        },
+        {
+          "test_name": "Invalid mode switch",
+          "category": "Enhanced Error Handling",
+          "status": "ROBUST",
+          "details": "Gracefully handled without exception",
+          "duration": 0.1831192970275879,
+          "robustness_score": 3,
+          "timestamp": 1761974367.8457503
+        },
+        {
+          "test_name": "Empty file pattern search",
+          "category": "Enhanced Error Handling",
+          "status": "ROBUST",
+          "details": "Gracefully handled without exception",
+          "duration": 0.050551652908325195,
+          "robustness_score": 3,
+          "timestamp": 1761974367.9055269
+        },
+        {
+          "test_name": "Deep directory listing",
+          "category": "Enhanced Error Handling",
+          "status": "ROBUST",
+          "details": "Gracefully handled without exception",
+          "duration": 0.00017690658569335938,
+          "robustness_score": 3,
+          "timestamp": 1761974367.9146068
+        }
+      ]
+    },
+    "System Resilience": {
+      "PASS": 4,
+      "ROBUST": 0,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "Rapid file access",
+          "category": "System Resilience",
+          "status": "PASS",
+          "details": "Resilience test completed successfully",
+          "duration": 0.00029158592224121094,
+          "robustness_score": 2,
+          "timestamp": 1761974367.9259193
+        },
+        {
+          "test_name": "Multiple schedule queries",
+          "category": "System Resilience",
+          "status": "PASS",
+          "details": "Resilience test completed successfully",
+          "duration": 0.034464120864868164,
+          "robustness_score": 2,
+          "timestamp": 1761974367.9685373
+        },
+        {
+          "test_name": "Concurrent mode switching",
+          "category": "System Resilience",
+          "status": "PASS",
+          "details": "Resilience test completed successfully",
+          "duration": 0.004238128662109375,
+          "robustness_score": 2,
+          "timestamp": 1761974368.5031176
+        },
+        {
+          "test_name": "Extended search patterns",
+          "category": "System Resilience",
+          "status": "PASS",
+          "details": "Resilience test completed successfully",
+          "duration": 1.0436789989471436,
+          "robustness_score": 2,
+          "timestamp": 1761974369.5570197
+        }
+      ]
+    }
+  },
+  "detailed_results": [
+    {
+      "test_name": "get_schedule_status",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 0 schedules",
+      "duration": 0.031036853790283203,
+      "robustness_score": 1,
+      "timestamp": 1761974363.6471536
+    },
+    {
+      "test_name": "manage_schedules_create",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Created schedule: N/A",
+      "duration": 0.23486781120300293,
+      "robustness_score": 1,
+      "timestamp": 1761974363.88634
+    },
+    {
+      "test_name": "track_task_time",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Time tracking started: False",
+      "duration": 0.00982046127319336,
+      "robustness_score": 1,
+      "timestamp": 1761974363.913119
+    },
+    {
+      "test_name": "get_time_tracking",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 0 records",
+      "duration": 0.006123542785644531,
+      "robustness_score": 1,
+      "timestamp": 1761974363.9362595
+    },
+    {
+      "test_name": "get_persistent_memory",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 3 sections",
+      "duration": 0.0005657672882080078,
+      "robustness_score": 1,
+      "timestamp": 1761974363.944091
+    },
+    {
+      "test_name": "update_persistent_memory",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Entry added at line: N/A",
+      "duration": 0.007878780364990234,
+      "robustness_score": 1,
+      "timestamp": 1761974363.9592202
+    },
+    {
+      "test_name": "get_todo_status",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 18 TODO items",
+      "duration": 0.000499725341796875,
+      "robustness_score": 1,
+      "timestamp": 1761974363.9658759
+    },
+    {
+      "test_name": "delegate_task",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Delegated to mode: N/A",
+      "duration": 0.3772604465484619,
+      "robustness_score": 1,
+      "timestamp": 1761974364.3520997
+    },
+    {
+      "test_name": "read_project_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Read 15566 characters",
+      "duration": 0.0004220008850097656,
+      "robustness_score": 1,
+      "timestamp": 1761974364.3619773
+    },
+    {
+      "test_name": "list_project_structure",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Found 0 items",
+      "duration": 0.0024137496948242188,
+      "robustness_score": 1,
+      "timestamp": 1761974364.3729227
+    },
+    {
+      "test_name": "search_in_files",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Found 5 matches",
+      "duration": 0.0024373531341552734,
+      "robustness_score": 1,
+      "timestamp": 1761974364.3856347
+    },
+    {
+      "test_name": "write_project_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "File written: True",
+      "duration": 0.0007016658782958984,
+      "robustness_score": 1,
+      "timestamp": 1761974364.3984554
+    },
+    {
+      "test_name": "backup_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Backup created: True",
+      "duration": 0.0032968521118164062,
+      "robustness_score": 1,
+      "timestamp": 1761974364.4082599
+    },
+    {
+      "test_name": "restore_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Restore successful: True",
+      "duration": 0.005464076995849609,
+      "robustness_score": 1,
+      "timestamp": 1761974364.4193487
+    },
+    {
+      "test_name": "get_system_status",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Status: unknown",
+      "duration": 1.031001091003418,
+      "robustness_score": 1,
+      "timestamp": 1761974365.4602203
+    },
+    {
+      "test_name": "get_mode_capabilities",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Found 0 modes",
+      "duration": 0.004311084747314453,
+      "robustness_score": 1,
+      "timestamp": 1761974365.4712908
+    },
+    {
+      "test_name": "switch_mode",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Mode switched to: N/A",
+      "duration": 0.004089832305908203,
+      "robustness_score": 1,
+      "timestamp": 1761974365.4856987
+    },
+    {
+      "test_name": "run_validation",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Validation passed: False",
+      "duration": 0.00016379356384277344,
+      "robustness_score": 1,
+      "timestamp": 1761974365.494321
+    },
+    {
+      "test_name": "error_recovery",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Recovery action: none",
+      "duration": 0.5196716785430908,
+      "robustness_score": 2,
+      "timestamp": 1761974366.0222363
+    },
+    {
+      "test_name": "sync_environment",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Sync completed: False",
+      "duration": 1.0484471321105957,
+      "robustness_score": 1,
+      "timestamp": 1761974367.0793214
+    },
+    {
+      "test_name": "integrate_schedules",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 5885 characters",
+      "duration": 0.00030493736267089844,
+      "robustness_score": 1,
+      "timestamp": 1761974367.086395
+    },
+    {
+      "test_name": "integrate_time_tracking",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 4386 characters",
+      "duration": 0.0002579689025878906,
+      "robustness_score": 1,
+      "timestamp": 1761974367.0946372
+    },
+    {
+      "test_name": "integrate_persistent_memory",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 21029 characters",
+      "duration": 0.00026679039001464844,
+      "robustness_score": 1,
+      "timestamp": 1761974367.108726
+    },
+    {
+      "test_name": "integrate_todo",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 11810 characters",
+      "duration": 0.00029850006103515625,
+      "robustness_score": 1,
+      "timestamp": 1761974367.117898
+    },
+    {
+      "test_name": "integrate_server_files",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Accessed 0 items",
+      "duration": 0.0008182525634765625,
+      "robustness_score": 1,
+      "timestamp": 1761974367.1272855
+    },
+    {
+      "test_name": "Nonexistent file handling",
+      "category": "Enhanced Error Handling",
+      "status": "ROBUST",
+      "details": "Gracefully handled without exception",
+      "duration": 0.00022172927856445312,
+      "robustness_score": 3,
+      "timestamp": 1761974367.4784174
+    },
+    {
+      "test_name": "Invalid schedule operation",
+      "category": "Enhanced Error Handling",
+      "status": "ROBUST",
+      "details": "Gracefully handled without exception",
+      "duration": 0.12158751487731934,
+      "robustness_score": 3,
+      "timestamp": 1761974367.6255922
+    },
+    {
+      "test_name": "Invalid validation type",
+      "category": "Enhanced Error Handling",
+      "status": "ROBUST",
+      "details": "Gracefully handled without exception",
+      "duration": 0.00011229515075683594,
+      "robustness_score": 3,
+      "timestamp": 1761974367.6528854
+    },
+    {
+      "test_name": "Invalid mode switch",
+      "category": "Enhanced Error Handling",
+      "status": "ROBUST",
+      "details": "Gracefully handled without exception",
+      "duration": 0.1831192970275879,
+      "robustness_score": 3,
+      "timestamp": 1761974367.8457503
+    },
+    {
+      "test_name": "Empty file pattern search",
+      "category": "Enhanced Error Handling",
+      "status": "ROBUST",
+      "details": "Gracefully handled without exception",
+      "duration": 0.050551652908325195,
+      "robustness_score": 3,
+      "timestamp": 1761974367.9055269
+    },
+    {
+      "test_name": "Deep directory listing",
+      "category": "Enhanced Error Handling",
+      "status": "ROBUST",
+      "details": "Gracefully handled without exception",
+      "duration": 0.00017690658569335938,
+      "robustness_score": 3,
+      "timestamp": 1761974367.9146068
+    },
+    {
+      "test_name": "Rapid file access",
+      "category": "System Resilience",
+      "status": "PASS",
+      "details": "Resilience test completed successfully",
+      "duration": 0.00029158592224121094,
+      "robustness_score": 2,
+      "timestamp": 1761974367.9259193
+    },
+    {
+      "test_name": "Multiple schedule queries",
+      "category": "System Resilience",
+      "status": "PASS",
+      "details": "Resilience test completed successfully",
+      "duration": 0.034464120864868164,
+      "robustness_score": 2,
+      "timestamp": 1761974367.9685373
+    },
+    {
+      "test_name": "Concurrent mode switching",
+      "category": "System Resilience",
+      "status": "PASS",
+      "details": "Resilience test completed successfully",
+      "duration": 0.004238128662109375,
+      "robustness_score": 2,
+      "timestamp": 1761974368.5031176
+    },
+    {
+      "test_name": "Extended search patterns",
+      "category": "System Resilience",
+      "status": "PASS",
+      "details": "Resilience test completed successfully",
+      "duration": 1.0436789989471436,
+      "robustness_score": 2,
+      "timestamp": 1761974369.5570197
+    }
+  ],
+  "server_config": {
+    "name": "Loop-Orchestrator MCP Server",
+    "instructions": "Comprehensive MCP server providing orchestrator management, file system access, and development tools for the Loop-Orchestrator project",
+    "version": "1.0.0",
+    "transport": "stdio",
+    "base_port": 8080,
+    "workspace_path": "/workspaces/Loop-Orchestrator",
+    "file_paths": {
+      "schedules": ".roo/schedules.json",
+      "task_timing": "task_timing.tsv",
+      "persistent_memory": "persistent-memory.md",
+      "todo": "TODO.md",
+      "modes": ".roomodes",
+      "backups": "backups"
+    },
+    "system_settings": {
+      "python_version_min": "3.10.0",
+      "command_failure_limit": 3,
+      "time_tracking_enabled": true,
+      "persistent_memory_max_lines": 300
+    },
+    "performance_settings": {
+      "operation_timeout": 300,
+      "max_concurrent_operations": 5,
+      "cache_enabled": true,
+      "cache_ttl": 300
+    },
+    "workflow_settings": {
+      "workflow_stages": [
+        "Implementation",
+        "Validation",
+        "Quality",
+        "Integration",
+        "Planning"
+      ],
+      "mode_delegation_enabled": true,
+      "enhanced_reasoning_enabled": true
+    }
+  },
+  "system_quality_assessment": {
+    "production_ready": false,
+    "error_handling_robust": false,
+    "system_resilience": true,
+    "overall_score": 50.0
+  }
+}
