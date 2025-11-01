@@ -1,213 +1,230 @@
 #!/usr/bin/env python3
 """
-MCP Server Startup Script
+MCP Server Startup Script for Loop-Orchestrator
 
-This script handles MCP server initialization and startup for the Loop Orchestrator.
-It automatically detects Python version and starts the appropriate server implementation.
+This script handles MCP server startup with automatic mode detection
+and compatibility checking for Python 3.12.1 environment.
 """
 
-import os
+import asyncio
 import sys
+import os
+import json
 import subprocess
-import signal
 import time
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Dict, Any
+import logging
+
+# Add the current workspace to Python path
+sys.path.insert(0, str(Path(__file__).parent))
+
+try:
+    from mcp_server.main import get_server, validate_server_environment, create_server
+    from mcp_server.config.settings import get_server_config, validate_environment
+    MCP_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: MCP Server not fully available: {e}")
+    MCP_AVAILABLE = False
 
 
-class MCPServerManager:
-    """Manages MCP server startup and lifecycle."""
+def check_python_version() -> Dict[str, Any]:
+    """Check Python version compatibility."""
+    current_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    version_info = {
+        "current": current_version,
+        "compatible": current_version >= "3.10.0",
+        "required": "3.10.0",
+        "python_path": sys.executable
+    }
+    return version_info
 
-    def __init__(self):
-        self.server_process: Optional[subprocess.Popen] = None
-        self.python_version = sys.version_info
-        self.is_python_compatible = self.python_version >= (3, 10)
 
-    def check_dependencies(self) -> bool:
-        """Check if required dependencies are available."""
-        if self.is_python_compatible:
-            try:
-                import mcp
-                return True
-            except ImportError:
-                print("MCP SDK not available, falling back to compatibility mode")
-                return False
-        else:
-            # Check for fallback server
-            try:
-                import mcp_server_fallback
-                return True
-            except ImportError:
-                print("Fallback MCP server not available")
-                return False
-
-    def start_server(self, mode: str = "stdio", port: int = 3000, host: str = "localhost") -> bool:
-        """
-        Start the MCP server.
-
-        Args:
-            mode: Server mode ("stdio" or "http")
-            port: Port for HTTP mode
-            host: Host for HTTP mode
-
-        Returns:
-            True if server started successfully
-        """
-        if not self.check_dependencies():
-            print("MCP server dependencies not available")
-            return False
-
-        try:
-            if mode == "stdio":
-                return self._start_stdio_server()
-            elif mode == "http":
-                return self._start_http_server(port, host)
-            else:
-                print(f"Unknown server mode: {mode}")
-                return False
-
-        except Exception as e:
-            print(f"Failed to start MCP server: {e}")
-            return False
-
-    def _start_stdio_server(self) -> bool:
-        """Start MCP server in stdio mode."""
-        if self.is_python_compatible:
-            # Try full MCP server
-            try:
-                cmd = [sys.executable, "mcp_server.py"]
-                self.server_process = subprocess.Popen(
-                    cmd,
-                    stdin=subprocess.PIPE,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    cwd=os.getcwd()
-                )
-                print("Started full MCP server (stdio mode)")
-                return True
-            except Exception as e:
-                print(f"Full MCP server failed: {e}, trying fallback")
-
-        # Fallback server
-        try:
-            cmd = [sys.executable, "mcp_server_fallback.py"]
-            self.server_process = subprocess.Popen(
-                cmd,
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                cwd=os.getcwd()
-            )
-            print("Started fallback MCP server (stdio mode)")
-            return True
-        except Exception as e:
-            print(f"Fallback MCP server failed: {e}")
-            return False
-
-    def _start_http_server(self, port: int, host: str) -> bool:
-        """Start MCP server in HTTP mode."""
-        if not self.is_python_compatible:
-            print("HTTP mode requires Python 3.10+")
-            return False
-
-        try:
-            cmd = [sys.executable, "orchestrator_integration.py", "serve", "--port", str(port), "--host", host]
-            self.server_process = subprocess.Popen(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                cwd=os.getcwd()
-            )
-            print(f"Started MCP server (HTTP mode on {host}:{port})")
-            return True
-        except Exception as e:
-            print(f"HTTP server failed: {e}")
-            return False
-
-    def stop_server(self):
-        """Stop the MCP server."""
-        if self.server_process:
-            try:
-                if os.name == 'nt':  # Windows
-                    self.server_process.terminate()
-                else:
-                    self.server_process.send_signal(signal.SIGTERM)
-                    time.sleep(0.1)
-                    if self.server_process.poll() is None:
-                        self.server_process.kill()
-
-                self.server_process.wait(timeout=5)
-                print("MCP server stopped")
-            except Exception as e:
-                print(f"Error stopping MCP server: {e}")
-                try:
-                    self.server_process.kill()
-                except:
-                    pass
-            finally:
-                self.server_process = None
-
-    def is_running(self) -> bool:
-        """Check if the server is running."""
-        return self.server_process is not None and self.server_process.poll() is None
-
-    def get_server_info(self) -> dict:
-        """Get information about the server."""
-        return {
-            "python_version": f"{self.python_version.major}.{self.python_version.minor}.{self.python_version.micro}",
-            "python_compatible": self.is_python_compatible,
-            "server_running": self.is_running(),
-            "server_pid": self.server_process.pid if self.server_process else None,
-            "server_mode": "full" if self.is_python_compatible else "fallback"
+def check_mcp_sdk() -> Dict[str, Any]:
+    """Check MCP SDK availability."""
+    try:
+        import mcp
+        sdk_info = {
+            "available": True,
+            "version": getattr(mcp, "__version__", "unknown"),
+            "mcp_path": mcp.__file__ if hasattr(mcp, '__file__') else None
         }
+    except ImportError:
+        sdk_info = {"available": False, "version": None, "mcp_path": None}
+    
+    return sdk_info
+
+
+def check_server_files() -> Dict[str, Any]:
+    """Check if required server files exist."""
+    server_dir = Path(__file__).parent / "mcp_server"
+    required_files = [
+        "main.py",
+        "models.py",
+        "config/settings.py",
+        "tools/orchestrator.py",
+        "tools/filesystem.py", 
+        "tools/development.py",
+        "utils/orchestrator_io.py",
+        "utils/helpers.py"
+    ]
+    
+    files_status = {}
+    for file_path in required_files:
+        full_path = server_dir / file_path
+        files_status[file_path] = {
+            "exists": full_path.exists(),
+            "path": str(full_path)
+        }
+    
+    all_files_exist = all(f["exists"] for f in files_status.values())
+    return {"all_exist": all_files_exist, "files": files_status}
+
+
+def get_server_info() -> Dict[str, Any]:
+    """Get comprehensive server information."""
+    if not MCP_AVAILABLE:
+        return {"status": "unavailable", "error": "MCP server modules not available"}
+    
+    try:
+        python_info = check_python_version()
+        sdk_info = check_mcp_sdk()
+        files_info = check_server_files()
+        
+        config = get_server_config()
+        
+        server_info = {
+            "status": "available" if files_info["all_exist"] else "incomplete",
+            "python_info": python_info,
+            "sdk_info": sdk_info,
+            "files_info": files_info,
+            "server_config": config.to_dict(),
+            "timestamp": time.time()
+        }
+        
+        return server_info
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "timestamp": time.time()
+        }
+
+
+async def start_server(mode: str = "auto") -> int:
+    """Start the MCP server in the specified mode."""
+    if not MCP_AVAILABLE:
+        print("Error: MCP Server modules not available")
+        return 1
+    
+    try:
+        # Validate environment
+        validation = validate_server_environment()
+        if validation.get("status") == "invalid":
+            print(f"Environment validation failed: {validation}")
+            return 1
+        
+        print(f"Starting Loop-Orchestrator MCP Server in {mode} mode...")
+        
+        if mode == "stdio":
+            # Run server in stdio mode
+            await run_stdio_server()
+        elif mode == "http":
+            # Run server in HTTP mode
+            await run_http_server()
+        else:
+            # Auto-detect mode based on environment
+            if sys.stdin.isatty():
+                print("Starting in stdio mode (detected interactive terminal)")
+                await run_stdio_server()
+            else:
+                print("Starting in http mode (detected non-interactive environment)")
+                await run_http_server()
+                
+        return 0
+        
+    except KeyboardInterrupt:
+        print("\nServer shutdown requested")
+        return 0
+    except Exception as e:
+        print(f"Server startup failed: {e}")
+        return 1
+
+
+async def run_stdio_server():
+    """Run the server in stdio mode."""
+    server = get_server()
+    print("Loop-Orchestrator MCP Server starting in stdio mode...")
+    print("Press Ctrl+C to stop the server")
+    await server.run_stdio_async()
+
+
+async def run_http_server():
+    """Run the server in HTTP mode."""
+    server = get_server()
+    config = get_server_config()
+    port = config.base_port
+    
+    print(f"Loop-Orchestrator MCP Server starting in HTTP mode on port {port}...")
+    print(f"Server will be available at: http://localhost:{port}")
+    print("Press Ctrl+C to stop the server")
+    
+    await server.run_streamable_http_async()
 
 
 def main():
     """Main entry point."""
     import argparse
-
-    parser = argparse.ArgumentParser(description="MCP Server Startup Manager")
-    parser.add_argument("--mode", choices=["stdio", "http"], default="stdio",
-                       help="Server mode (default: stdio)")
-    parser.add_argument("--port", type=int, default=3000,
-                       help="Port for HTTP mode (default: 3000)")
-    parser.add_argument("--host", default="localhost",
-                       help="Host for HTTP mode (default: localhost)")
-    parser.add_argument("--info", action="store_true",
-                       help="Show server information and exit")
-
+    
+    parser = argparse.ArgumentParser(
+        description="Loop-Orchestrator MCP Server Startup Script",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  %(prog)s --info                    # Show server information
+  %(prog)s --mode stdio              # Start in stdio mode
+  %(prog)s --mode http               # Start in HTTP mode  
+  %(prog)s                           # Auto-detect mode
+  %(prog)s --mode auto --port 8080   # Auto mode with custom port
+        """
+    )
+    
+    parser.add_argument(
+        "--info", 
+        action="store_true", 
+        help="Show server information and exit"
+    )
+    
+    parser.add_argument(
+        "--mode",
+        choices=["stdio", "http", "auto"],
+        default="auto",
+        help="Server transport mode (default: auto)"
+    )
+    
+    parser.add_argument(
+        "--port",
+        type=int,
+        help="HTTP port (default: 8080)"
+    )
+    
     args = parser.parse_args()
-
-    manager = MCPServerManager()
-
+    
+    # Show server info if requested
     if args.info:
-        import json
-        print(json.dumps(manager.get_server_info(), indent=2))
-        return
-
-    try:
-        if manager.start_server(args.mode, args.port, args.host):
-            print("MCP server started successfully")
-
-            # Keep running until interrupted
-            def signal_handler(signum, frame):
-                print("\nStopping MCP server...")
-                manager.stop_server()
-                sys.exit(0)
-
-            signal.signal(signal.SIGINT, signal_handler)
-            signal.signal(signal.SIGTERM, signal_handler)
-
-            # Wait for server to finish
-            if manager.server_process:
-                manager.server_process.wait()
-        else:
-            print("Failed to start MCP server")
-            sys.exit(1)
-
-    except KeyboardInterrupt:
-        print("\nStopping MCP server...")
-        manager.stop_server()
+        info = get_server_info()
+        print(json.dumps(info, indent=2))
+        return 0
+    
+    # Override port if specified
+    if args.port and MCP_AVAILABLE:
+        config = get_server_config()
+        config.base_port = args.port
+    
+    # Start the server
+    return asyncio.run(start_server(args.mode))
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
