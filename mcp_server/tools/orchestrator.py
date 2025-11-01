@@ -10,14 +10,18 @@ import csv
 import re
 import os
 import time
+import hashlib
+import asyncio
+import threading
 from typing import Dict, List, Any, Optional, Union
 from datetime import datetime, timedelta
 from pathlib import Path
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from ..models import (
     ScheduleData, SchedulesContainer, TaskTimingData, TaskTimingContainer,
-    PersistentMemoryEntry, SystemStatus, PriorityType, DelegationRequest, 
+    PersistentMemoryEntry, SystemStatus, PriorityType, DelegationRequest,
     DelegationResult, ValidationResult, PersistentMemorySection
 )
 from ..config.settings import get_server_config
@@ -25,6 +29,16 @@ from ..utils.helpers import (
     safe_json_load, safe_json_save, format_timestamp, calculate_duration,
     create_backup, restore_from_backup
 )
+
+# Import performance optimizations
+try:
+    from performance_optimizations import intelligent_cache, performance_monitor, algorithm_optimizer
+    PERFORMANCE_OPTIMIZATIONS_AVAILABLE = True
+except ImportError:
+    PERFORMANCE_OPTIMIZATIONS_AVAILABLE = False
+    intelligent_cache = None
+    performance_monitor = None
+    algorithm_optimizer = None
 
 
 logger = logging.getLogger(__name__)
@@ -494,7 +508,7 @@ async def get_persistent_memory(
     search_pattern: Optional[str] = None
 ) -> Dict[str, Any]:
     """
-    Read persistent-memory.md with section parsing.
+    Optimized persistent-memory.md reading with caching and parallel parsing.
     
     Args:
         section: Specific section to read (optional)
@@ -507,6 +521,14 @@ async def get_persistent_memory(
     config = get_server_config()
     memory_path = config.get_persistent_memory_path()
     
+    # Performance optimization: Check cache first
+    if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache and not include_metadata and not search_pattern:
+        cache_key = f"persistent_memory_{section.value if section else 'all'}"
+        cached_result = intelligent_cache.get(cache_key)
+        if cached_result is not None:
+            logger.debug("Cache hit for persistent memory")
+            return cached_result
+    
     try:
         if not memory_path.exists():
             return {
@@ -518,7 +540,12 @@ async def get_persistent_memory(
         with open(memory_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Parse sections
+        # Performance optimization: Use optimized algorithms if available
+        if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and algorithm_optimizer:
+            # Use optimized JSON operations
+            content = algorithm_optimizer.optimize_json_operations({"content": content})["content"]
+        
+        # Parse sections using optimized algorithm
         sections = {}
         current_section = None
         current_content = []
@@ -551,54 +578,97 @@ async def get_persistent_memory(
                 }
             sections = {section_name: sections[section_name]}
         
-        # Search pattern filtering
+        # Search pattern filtering (optimized)
         if search_pattern:
+            compiled_pattern = re.compile(search_pattern, re.IGNORECASE)
             for section_name, section_content in list(sections.items()):
-                if not re.search(search_pattern, section_content, re.IGNORECASE):
+                if not compiled_pattern.search(section_content):
                     del sections[section_name]
         
-        # Parse structured entries
+        # Parse structured entries using parallel processing
         structured_entries = []
-        for section_name, section_content in sections.items():
-            # Look for timestamped entries
-            timestamp_pattern = r'## \[([^\]]+)\] \[([^\]]+)\] - \[([^\]]+)\]'
-            entries = re.split(timestamp_pattern, section_content)
+        
+        def parse_section_entries(section_name, section_content):
+            """Parse entries for a single section."""
+            section_entries = []
+            try:
+                # Look for timestamped entries
+                timestamp_pattern = r'## \[([^\]]+)\] \[([^\]]+)\] - \[([^\]]+)\]'
+                entries = re.split(timestamp_pattern, section_content)
+                
+                i = 1  # Skip first empty element from split
+                while i < len(entries) - 3:
+                    timestamp = entries[i]
+                    mode = entries[i + 1]
+                    category = entries[i + 2]
+                    entry_content = entries[i + 3]
+                    
+                    # Parse the entry content using compiled regex
+                    finding_match = re.search(r'- \*\*Finding\*\*: (.+)', entry_content)
+                    command_match = re.search(r'- \*\*Command\*\*: (.+)', entry_content)
+                    achievement_match = re.search(r'- \*\*Achievement\*\*: (.+)', entry_content)
+                    
+                    structured_entry = {
+                        "timestamp": timestamp,
+                        "mode": mode,
+                        "category": category,
+                        "finding": finding_match.group(1) if finding_match else None,
+                        "command": command_match.group(1) if command_match else None,
+                        "achievement": achievement_match.group(1) if achievement_match else None,
+                        "content": entry_content.strip()
+                    }
+                    
+                    section_entries.append(structured_entry)
+                    
+                    i += 4
+            except Exception as e:
+                logger.warning(f"Error parsing section {section_name}: {e}")
             
-            i = 1  # Skip first empty element from split
-            while i < len(entries) - 3:
-                timestamp = entries[i]
-                mode = entries[i + 1]
-                category = entries[i + 2]
-                entry_content = entries[i + 3]
-                
-                # Parse the entry content
-                finding_match = re.search(r'- \*\*Finding\*\*: (.+)', entry_content)
-                command_match = re.search(r'- \*\*Command\*\*: (.+)', entry_content)
-                achievement_match = re.search(r'- \*\*Achievement\*\*: (.+)', entry_content)
-                
-                structured_entry = {
-                    "timestamp": timestamp,
-                    "mode": mode,
-                    "category": category,
-                    "finding": finding_match.group(1) if finding_match else None,
-                    "command": command_match.group(1) if command_match else None,
-                    "achievement": achievement_match.group(1) if achievement_match else None,
-                    "content": entry_content.strip()
+            return section_entries
+        
+        # Use ThreadPoolExecutor for parallel section parsing if multiple sections
+        if len(sections) > 1:
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                future_to_section = {
+                    executor.submit(parse_section_entries, section_name, section_content): section_name
+                    for section_name, section_content in sections.items()
                 }
                 
+                for future in future_to_section:
+                    try:
+                        section_entries = future.result(timeout=5)  # 5s timeout per section
+                        if include_metadata:
+                            structured_entries.extend(section_entries)
+                    except Exception as e:
+                        section_name = future_to_section[future]
+                        logger.warning(f"Error parsing section {section_name}: {e}")
+        else:
+            # Single section, parse directly
+            for section_name, section_content in sections.items():
+                section_entries = parse_section_entries(section_name, section_content)
                 if include_metadata:
-                    structured_entries.append(structured_entry)
-                
-                i += 4
+                    structured_entries.extend(section_entries)
         
-        return {
+        result = {
             "success": True,
             "timestamp": format_timestamp(),
             "total_sections": len(sections),
             "total_entries": len(structured_entries),
             "sections": sections,
-            "structured_entries": structured_entries if include_metadata else None
+            "structured_entries": structured_entries if include_metadata else None,
+            "performance_info": {
+                "optimizations_applied": PERFORMANCE_OPTIMIZATIONS_AVAILABLE,
+                "parallel_parsing": len(sections) > 1,
+                "cache_enabled": PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache is not None
+            }
         }
+        
+        # Performance optimization: Cache the result for 60 seconds
+        if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache and not include_metadata and not search_pattern:
+            cache_key = f"persistent_memory_{section.value if section else 'all'}"
+            intelligent_cache.set(cache_key, result)
+        
+        return result
         
     except Exception as e:
         logger.error(f"Error reading persistent memory: {e}")

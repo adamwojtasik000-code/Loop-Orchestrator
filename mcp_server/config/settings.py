@@ -61,9 +61,15 @@ class ServerConfig(BaseSettings):
     
     # Timeout and performance settings
     operation_timeout: int = Field(default=300, ge=30, le=3600, description="Default operation timeout in seconds")
-    max_concurrent_operations: int = Field(default=5, ge=1, le=20, description="Maximum concurrent operations")
+    max_concurrent_operations: int = Field(default=8, ge=1, le=20, description="Maximum concurrent operations (optimized for 1.5x CPU cores)")
     cache_enabled: bool = Field(default=True, description="Enable result caching")
-    cache_ttl: int = Field(default=300, ge=60, le=3600, description="Cache TTL in seconds")
+    cache_ttl: int = Field(default=180, ge=60, le=3600, description="Cache TTL in seconds (optimized for frequent access)")
+    thread_pool_optimization: bool = Field(default=True, description="Enable thread pool optimization")
+    memory_optimization: bool = Field(default=True, description="Enable memory management optimization")
+    intelligent_caching: bool = Field(default=True, description="Enable intelligent caching with LRU eviction")
+    performance_monitoring: bool = Field(default=True, description="Enable real-time performance monitoring")
+    batch_processing_enabled: bool = Field(default=True, description="Enable batch processing for MCP requests")
+    algorithm_optimization: bool = Field(default=True, description="Enable optimized algorithms for critical paths")
     
     # Development workflow settings
     workflow_stages: List[str] = Field(
@@ -151,6 +157,12 @@ class ServerConfig(BaseSettings):
             "performance_settings": {
                 "operation_timeout": self.operation_timeout,
                 "max_concurrent_operations": self.max_concurrent_operations,
+                "thread_pool_optimization": self.thread_pool_optimization,
+                "memory_optimization": self.memory_optimization,
+                "intelligent_caching": self.intelligent_caching,
+                "performance_monitoring": self.performance_monitoring,
+                "batch_processing_enabled": self.batch_processing_enabled,
+                "algorithm_optimization": self.algorithm_optimization,
                 "cache_enabled": self.cache_enabled,
                 "cache_ttl": self.cache_ttl
             },

@@ -35,7 +35,7 @@ def format_timestamp(timestamp: Optional[str] = None) -> str:
     return timestamp
 
 
-def calculate_duration(start_time: str, end_time: str) -> int:
+def calculate_duration(start_time: Optional[str], end_time: Optional[str]) -> int:
     """
     Calculate duration in seconds between two timestamps.
     
@@ -47,6 +47,9 @@ def calculate_duration(start_time: str, end_time: str) -> int:
         Duration in seconds
     """
     try:
+        if start_time is None or end_time is None:
+            return 0
+        
         start_dt = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
         end_dt = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
         return int((end_dt - start_dt).total_seconds())
@@ -127,7 +130,8 @@ def create_backup(
         else:
             backup_filename = source_path.name
         
-        if include_timestamp:
+        # Only add timestamp if backup_name is not provided
+        if include_timestamp and not backup_name:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             stem = source_path.stem
             suffix = source_path.suffix
@@ -409,14 +413,17 @@ def file_lock(file_path: Path, timeout: int = 30):
     import fcntl
     
     lock_file = file_path.with_suffix(file_path.suffix + ".lock")
+    lock_handle = None
     
     try:
-        with open(lock_file, 'w') as f:
-            # Try to acquire lock
-            fcntl.flock(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-            yield
+        lock_handle = open(lock_file, 'w')
+        # Try to acquire lock
+        fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        yield
     except (IOError, OSError):
         # Lock acquisition failed
+        if lock_handle:
+            lock_handle.close()
         time.sleep(1)
         timeout -= 1
         if timeout <= 0:
@@ -427,9 +434,10 @@ def file_lock(file_path: Path, timeout: int = 30):
     finally:
         # Release lock
         try:
-            import fcntl
-            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
-            lock_file.unlink(missing_ok=True)
+            if lock_handle:
+                fcntl.flock(lock_handle.fileno(), fcntl.LOCK_UN)
+                lock_handle.close()
+                lock_file.unlink(missing_ok=True)
         except (IOError, OSError):
             pass
 

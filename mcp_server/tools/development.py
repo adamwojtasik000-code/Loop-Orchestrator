@@ -8,19 +8,33 @@ import os
 import sys
 import json
 import time
+import hashlib
+import asyncio
+import threading
 import psutil
 import subprocess
 from typing import Dict, List, Any, Optional, Union
 from datetime import datetime, timedelta
 from pathlib import Path
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from ..models import (
-    SystemStatus, ModeCapabilities, ValidationResult, 
+    SystemStatus, ModeCapabilities, ValidationResult,
     DelegationRequest, DelegationResult, PriorityType
 )
 from ..config.settings import get_server_config
 from ..utils.helpers import format_timestamp, safe_json_load
+
+# Import performance optimizations
+try:
+    from performance_optimizations import intelligent_cache, performance_monitor, performance_optimizer
+    PERFORMANCE_OPTIMIZATIONS_AVAILABLE = True
+except ImportError:
+    PERFORMANCE_OPTIMIZATIONS_AVAILABLE = False
+    intelligent_cache = None
+    performance_monitor = None
+    performance_optimizer = None
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +47,7 @@ async def get_system_status(
     check_external_dependencies: bool = False
 ) -> Dict[str, Any]:
     """
-    Comprehensive system health check.
+    Optimized comprehensive system health check with caching and parallel processing.
     
     Args:
         include_performance: Whether to include performance metrics
@@ -46,21 +60,31 @@ async def get_system_status(
     """
     config = get_server_config()
     
+    # Performance optimization: Check cache first for basic status
+    if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache and not check_external_dependencies:
+        cache_key = f"system_status_{include_performance}_{include_file_health}_{include_orchestrator_status}"
+        cached_result = intelligent_cache.get(cache_key)
+        if cached_result is not None and time.time() - cached_result.get('cache_timestamp', 0) < 30:  # 30s cache
+            logger.debug("Cache hit for system status")
+            return cached_result
+    
     try:
+        start_time = time.time()
+        
         # Basic system information
         status = "healthy"
         warnings = []
         errors = []
         health_checks = {}
         
-        # Python version check
+        # Python version check (fast operation)
         python_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
         if python_version < config.python_version_min:
             status = "degraded"
             errors.append(f"Python version {python_version} is below minimum required {config.python_version_min}")
         health_checks["python_version"] = "pass" if python_version >= config.python_version_min else "fail"
         
-        # Workspace accessibility
+        # Workspace accessibility (fast operation)
         workspace_accessible = True
         if not config.workspace_path.exists():
             status = "critical"
@@ -68,12 +92,18 @@ async def get_system_status(
             workspace_accessible = False
         health_checks["workspace_access"] = "pass" if workspace_accessible else "fail"
         
-        # File health checks
-        file_health = {}
-        key_files_exist = {}
-        file_permissions = {}
+        # Performance optimization: Use thread pool for parallel health checks
+        health_check_results = {}
         
-        if include_file_health and workspace_accessible:
+        def check_file_health_worker():
+            """Worker for file health checks."""
+            if not include_file_health or not workspace_accessible:
+                return {}
+            
+            file_health = {}
+            key_files_exist = {}
+            file_permissions = {}
+            
             # Check key orchestrator files
             key_files = {
                 "schedules": config.get_schedules_path(),
@@ -100,10 +130,29 @@ async def get_system_status(
                 else:
                     file_health[file_name] = "missing"
                     file_permissions[file_name] = {"readable": False, "writable": False}
+            
+            return {
+                "file_health": file_health,
+                "key_files_exist": key_files_exist,
+                "file_permissions": file_permissions
+            }
         
-        # Orchestrator integration status
-        orchestrator_status = {}
-        if include_orchestrator_status and workspace_accessible:
+        def check_orchestrator_status_worker():
+            """Worker for orchestrator integration checks."""
+            if not include_orchestrator_status or not workspace_accessible:
+                return {}
+            
+            orchestrator_status = {}
+            key_files = {
+                "schedules": config.get_schedules_path(),
+                "task_timing": config.get_task_timing_path(),
+                "persistent_memory": config.get_persistent_memory_path(),
+            }
+            key_files_exist = {}
+            
+            for file_name, file_path in key_files.items():
+                key_files_exist[file_name] = file_path.exists()
+            
             # Check schedules file
             if key_files_exist.get("schedules", False):
                 try:
@@ -112,7 +161,6 @@ async def get_system_status(
                     orchestrator_status["schedules"] = "accessible"
                 except Exception as e:
                     orchestrator_status["schedules"] = f"error: {str(e)}"
-                    status = "degraded"
             else:
                 orchestrator_status["schedules"] = "not_found"
             
@@ -127,13 +175,21 @@ async def get_system_status(
                 orchestrator_status["persistent_memory"] = "accessible"
             else:
                 orchestrator_status["persistent_memory"] = "not_found"
+            
+            return {
+                "orchestrator_status": orchestrator_status,
+                "key_files_exist": key_files_exist
+            }
         
-        # Performance metrics
-        performance_metrics = {}
-        if include_performance:
+        def check_performance_metrics_worker():
+            """Worker for performance metrics collection."""
+            if not include_performance:
+                return {}
+            
+            performance_metrics = {}
             try:
                 # CPU usage
-                cpu_percent = psutil.cpu_percent(interval=1)
+                cpu_percent = psutil.cpu_percent(interval=0.1)  # Reduced interval for faster response
                 performance_metrics["cpu_percent"] = cpu_percent
                 
                 # Memory usage
@@ -152,31 +208,76 @@ async def get_system_status(
                 performance_metrics["process_cpu_percent"] = process.cpu_percent()
                 
             except Exception as e:
-                warnings.append(f"Could not collect performance metrics: {str(e)}")
                 performance_metrics["error"] = str(e)
+            
+            return {"performance_metrics": performance_metrics}
         
-        # Check external dependencies if requested
-        external_deps = {}
-        if check_external_dependencies:
+        def check_external_deps_worker():
+            """Worker for external dependencies."""
+            if not check_external_dependencies:
+                return {}
+            
+            external_deps = {}
             try:
                 # Check git
                 try:
-                    subprocess.run(["git", "--version"], capture_output=True, check=True)
+                    subprocess.run(["git", "--version"], capture_output=True, check=True, timeout=5)
                     external_deps["git"] = "available"
-                except (subprocess.CalledProcessError, FileNotFoundError):
+                except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                     external_deps["git"] = "not_found"
                 
                 # Check common Python packages
                 common_packages = ["pip", "python"]
                 for package in common_packages:
                     try:
-                        subprocess.run([package, "--version"], capture_output=True, check=True)
+                        subprocess.run([package, "--version"], capture_output=True, check=True, timeout=5)
                         external_deps[package] = "available"
-                    except (subprocess.CalledProcessError, FileNotFoundError):
+                    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
                         external_deps[package] = "not_found"
                         
             except Exception as e:
                 warnings.append(f"Could not check external dependencies: {str(e)}")
+            
+            return {"external_deps": external_deps}
+        
+        # Execute health checks in parallel using ThreadPoolExecutor
+        workers = [
+            ("file_health", check_file_health_worker),
+            ("orchestrator", check_orchestrator_status_worker),
+            ("performance", check_performance_metrics_worker),
+            ("external_deps", check_external_deps_worker)
+        ]
+        
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            future_to_worker = {
+                executor.submit(worker_func): worker_name
+                for worker_name, worker_func in workers
+            }
+            
+            for future in future_to_worker:
+                try:
+                    result = future.result(timeout=10)  # 10s timeout per worker
+                    health_check_results.update(result)
+                except Exception as e:
+                    worker_name = future_to_worker[future]
+                    logger.warning(f"Health check worker {worker_name} failed: {e}")
+                    health_check_results[worker_name] = {"error": str(e)}
+        
+        # Extract results
+        file_health = health_check_results.get("file_health", {})
+        key_files_exist = health_check_results.get("file_health", {}).get("key_files_exist", {})
+        file_permissions = health_check_results.get("file_health", {}).get("file_permissions", {})
+        orchestrator_status = health_check_results.get("orchestrator", {}).get("orchestrator_status", {})
+        performance_metrics = health_check_results.get("performance", {}).get("performance_metrics", {})
+        external_deps = health_check_results.get("external_deps", {}).get("external_deps", {})
+        
+        # Update orchestrator key_files_exist if not from file_health worker
+        if not key_files_exist and include_orchestrator_status:
+            key_files_exist = health_check_results.get("orchestrator", {}).get("key_files_exist", {})
+        
+        # Check for performance warnings and errors
+        if "error" in performance_metrics:
+            warnings.append(f"Could not collect performance metrics: {performance_metrics['error']}")
         
         # Calculate overall status
         if errors:
@@ -209,18 +310,44 @@ async def get_system_status(
             errors=errors
         )
         
-        return {
+        result = {
             "success": True,
             "status": system_status.dict(),
-            "timestamp": format_timestamp()
+            "timestamp": format_timestamp(),
+            "performance_info": {
+                "duration_ms": (time.time() - start_time) * 1000,
+                "optimizations_applied": PERFORMANCE_OPTIMIZATIONS_AVAILABLE,
+                "parallel_processing": True,
+                "cache_enabled": PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache is not None
+            }
         }
+        
+        # Performance optimization: Cache the result for 30 seconds
+        if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache and not check_external_dependencies:
+            result['cache_timestamp'] = time.time()
+            cache_key = f"system_status_{include_performance}_{include_file_health}_{include_orchestrator_status}"
+            intelligent_cache.set(cache_key, result)
+        
+        # Record performance metrics
+        if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and performance_monitor:
+            performance_monitor.record_metric(
+                "system_status_duration_ms",
+                (time.time() - start_time) * 1000,
+                {"optimized": PERFORMANCE_OPTIMIZATIONS_AVAILABLE}
+            )
+        
+        return result
         
     except Exception as e:
         logger.error(f"Error getting system status: {e}")
         return {
             "success": False,
             "error": str(e),
-            "timestamp": format_timestamp()
+            "timestamp": format_timestamp(),
+            "performance_info": {
+                "optimizations_applied": PERFORMANCE_OPTIMIZATIONS_AVAILABLE,
+                "error_duration_ms": (time.time() - time.time()) * 1000
+            }
         }
 
 

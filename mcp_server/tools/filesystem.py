@@ -9,10 +9,14 @@ import shutil
 import glob
 import re
 import time
+import asyncio
+import threading
+import hashlib
 from typing import Dict, List, Any, Optional, Union, Tuple
 from pathlib import Path
 from datetime import datetime
 import logging
+from concurrent.futures import ThreadPoolExecutor
 
 from ..models import FileOperationResult
 from ..config.settings import get_server_config
@@ -20,6 +24,15 @@ from ..utils.helpers import (
     ensure_directory, create_backup, restore_from_backup, validate_file_path,
     format_timestamp, safe_json_load, safe_json_save
 )
+
+# Import performance optimizations
+try:
+    from performance_optimizations import intelligent_cache, algorithm_optimizer
+    PERFORMANCE_OPTIMIZATIONS_AVAILABLE = True
+except ImportError:
+    PERFORMANCE_OPTIMIZATIONS_AVAILABLE = False
+    intelligent_cache = None
+    algorithm_optimizer = None
 
 
 logger = logging.getLogger(__name__)
@@ -372,7 +385,7 @@ async def search_in_files(
     context_lines: int = 0
 ) -> Dict[str, Any]:
     """
-    Regex search across project files.
+    Optimized regex search across project files with intelligent caching and parallel processing.
     
     Args:
         pattern: Regex pattern to search for
@@ -389,6 +402,14 @@ async def search_in_files(
     """
     config = get_server_config()
     workspace_path = config.workspace_path
+    
+    # Performance optimization: Check cache first
+    if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache:
+        cache_key = f"search_{hashlib.md5(f'{pattern}{directory}{file_pattern}{case_sensitive}{whole_word}{max_matches}'.encode()).hexdigest()}"
+        cached_result = intelligent_cache.get(cache_key)
+        if cached_result is not None:
+            logger.info(f"Cache hit for search pattern: {pattern}")
+            return cached_result
     
     try:
         if directory:
@@ -418,27 +439,40 @@ async def search_in_files(
                 "timestamp": format_timestamp()
             }
         
-        # Find files to search
-        files_to_search = []
-        if file_pattern:
-            files_to_search = list(search_path.rglob(file_pattern))
+        # Performance optimization: Use optimized algorithm if available
+        if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and algorithm_optimizer:
+            # Use optimized file search with early termination
+            results = algorithm_optimizer.optimize_file_search(
+                f"*{file_pattern or '*.py'}",
+                str(search_path),
+                max_matches or 100
+            )
+            
+            # Extract just the file paths for processing
+            files_to_search = [Path(r['file']) for r in results if 'file' in r]
         else:
-            # Search all text files
-            text_extensions = {'.txt', '.md', '.py', '.json', '.yaml', '.yml', '.tsv', '.csv', '.html', '.css', '.js', '.ts', '.sh', '.bat'}
-            for ext in text_extensions:
-                files_to_search.extend(search_path.rglob(f"*{ext}"))
+            # Find files to search
+            files_to_search = []
+            if file_pattern:
+                files_to_search = list(search_path.rglob(file_pattern))
+            else:
+                # Search all text files
+                text_extensions = {'.txt', '.md', '.py', '.json', '.yaml', '.yml', '.tsv', '.csv', '.html', '.css', '.js', '.ts', '.sh', '.bat'}
+                for ext in text_extensions:
+                    files_to_search.extend(search_path.rglob(f"*{ext}"))
+            
+            # Filter files by workspace boundary
+            files_to_search = [f for f in files_to_search if f.is_file() and validate_file_path(f, workspace_path)]
         
-        # Filter files by workspace boundary
-        files_to_search = [f for f in files_to_search if f.is_file() and validate_file_path(f, workspace_path)]
-        
-        # Search in files
+        # Performance optimization: Use thread pool for parallel file processing
         matches = []
         total_matches = 0
         files_searched = 0
+        max_workers = min(8, len(files_to_search))  # Limit concurrent workers
         
-        for file_path in files_to_search:
+        def search_file_worker(file_path: Path) -> Tuple[int, List[Dict]]:
+            """Worker function for parallel file search."""
             try:
-                files_searched += 1
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                     lines = f.readlines()
                 
@@ -469,18 +503,36 @@ async def search_in_files(
                             
                             file_matches.append(match_info)
                 
-                if file_matches:
-                    matches.extend(file_matches)
-                    total_matches += len(file_matches)
-                    
-                    if max_matches and total_matches >= max_matches:
-                        break
-                        
+                return len(file_matches), file_matches
+                
             except Exception as e:
                 logger.warning(f"Error searching in file {file_path}: {e}")
-                continue
+                return 0, []
         
-        return {
+        # Use ThreadPoolExecutor for parallel processing
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit all file search tasks
+            future_to_file = {executor.submit(search_file_worker, file_path): file_path
+                             for file_path in files_to_search}
+            
+            # Collect results
+            for future in future_to_file:
+                try:
+                    matches_count, file_matches = future.result(timeout=30)  # 30s timeout per file
+                    files_searched += 1
+                    if file_matches:
+                        matches.extend(file_matches)
+                        total_matches += matches_count
+                        
+                        if max_matches and total_matches >= max_matches:
+                            break
+                            
+                except Exception as e:
+                    logger.warning(f"Error processing file {future_to_file[future]}: {e}")
+                    files_searched += 1
+                    continue
+        
+        result = {
             "success": True,
             "pattern": pattern,
             "directory": directory or "workspace_root",
@@ -491,10 +543,17 @@ async def search_in_files(
                 "case_sensitive": case_sensitive,
                 "whole_word": whole_word,
                 "context_lines": context_lines,
-                "file_pattern": file_pattern
+                "file_pattern": file_pattern,
+                "optimizations_applied": PERFORMANCE_OPTIMIZATIONS_AVAILABLE
             },
             "timestamp": format_timestamp()
         }
+        
+        # Performance optimization: Cache the result
+        if PERFORMANCE_OPTIMIZATIONS_AVAILABLE and intelligent_cache and total_matches < 1000:
+            intelligent_cache.set(cache_key, result)
+        
+        return result
         
     except Exception as e:
         logger.error(f"Error searching in files: {e}")

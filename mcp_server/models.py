@@ -141,18 +141,15 @@ class TaskTimingData(BaseModel):
                     pass
         return v
 
-    @field_validator("duration")
-    @classmethod
-    def calculate_duration(cls, v, values):
-        """Calculate duration if not provided."""
-        if v is None and values.get("start_time") and values.get("end_time"):
+    def model_post_init(self, __context):
+        """Calculate duration if not provided after initialization."""
+        if self.duration is None and self.start_time and self.end_time:
             try:
-                start = datetime.fromisoformat(values["start_time"].replace("Z", "+00:00"))
-                end = datetime.fromisoformat(values["end_time"].replace("Z", "+00:00"))
-                return int((end - start).total_seconds())
+                start = datetime.fromisoformat(self.start_time.replace("Z", "+00:00"))
+                end = datetime.fromisoformat(self.end_time.replace("Z", "+00:00"))
+                self.duration = int((end - start).total_seconds())
             except (ValueError, TypeError):
                 pass
-        return v
 
 
 class TaskTimingContainer(BaseModel):
@@ -219,13 +216,10 @@ class PersistentMemoryEntry(BaseModel):
     category: Optional[str] = None
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
-    @field_validator("timestamp")
-    @classmethod
-    def set_timestamp(cls, v):
+    def model_post_init(self, __context):
         """Set timestamp if not provided."""
-        if v is None:
-            return datetime.utcnow().isoformat() + "Z"
-        return v
+        if self.timestamp is None:
+            self.timestamp = datetime.utcnow().isoformat() + "Z"
 
 
 class SystemStatus(BaseModel):
@@ -257,13 +251,10 @@ class SystemStatus(BaseModel):
     warnings: List[str] = Field(default_factory=list)
     errors: List[str] = Field(default_factory=list)
 
-    @field_validator("timestamp")
-    @classmethod
-    def set_timestamp(cls, v):
+    def model_post_init(self, __context):
         """Set timestamp if not provided."""
-        if v is None:
-            return datetime.utcnow().isoformat() + "Z"
-        return v
+        if self.timestamp is None:
+            self.timestamp = datetime.utcnow().isoformat() + "Z"
 
 
 class ModeInfo(BaseModel):

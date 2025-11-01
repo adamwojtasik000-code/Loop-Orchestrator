@@ -1,0 +1,42 @@
+{
+  "operation": "test_operation",
+  "error_context": {
+    "error": "test_error",
+    "operation": "test_operation"
+  },
+  "timestamp": "2025-11-01T05:32:18.768447Z",
+  "system_state": {
+    "success": true,
+    "status": {
+      "status": "healthy",
+      "timestamp": "2025-11-01T05:32:18.769438Z",
+      "version": "1.0.0",
+      "uptime": null,
+      "python_version": "3.12.1",
+      "workspace_accessible": true,
+      "key_files_exist": {},
+      "file_permissions": {},
+      "schedules_accessible": false,
+      "time_tracking_active": false,
+      "persistent_memory_valid": false,
+      "operation_count": 0,
+      "error_count": 0,
+      "average_operation_time": 0.0,
+      "memory_usage_mb": null,
+      "health_checks": {
+        "python_version": "pass",
+        "workspace_access": "pass"
+      },
+      "warnings": [],
+      "errors": []
+    },
+    "timestamp": "2025-11-01T05:32:18.769506Z",
+    "performance_info": {
+      "duration_ms": 1.0514259338378906,
+      "optimizations_applied": true,
+      "parallel_processing": true,
+      "cache_enabled": true
+    },
+    "cache_timestamp": 1761975138.7695131
+  }
+}
