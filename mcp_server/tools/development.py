@@ -383,7 +383,20 @@ async def switch_mode(
             }
         
         with open(modes_path, 'r', encoding='utf-8') as f:
-            modes_data = json.load(f)
+            # Handle both JSON and YAML format
+            modes_file_content = f.read().strip()
+            if modes_file_content.startswith('{'):
+                # JSON format
+                import json
+                modes_data = json.loads(modes_file_content)
+            else:
+                # YAML format - import and parse
+                try:
+                    import yaml
+                    modes_data = yaml.safe_load(modes_file_content)
+                except ImportError:
+                    # Fallback: try to parse as JSON even if it looks like YAML
+                    modes_data = json.loads(modes_file_content)
         
         mode_capabilities = ModeCapabilities.from_dict(modes_data)
         
@@ -724,7 +737,20 @@ async def validate_modes_configuration() -> Dict[str, Any]:
             return {"success": False, "errors": errors, "warnings": warnings}
         
         with open(modes_path, 'r', encoding='utf-8') as f:
-            modes_data = json.load(f)
+            # Handle both JSON and YAML format
+            modes_file_content = f.read().strip()
+            if modes_file_content.startswith('{'):
+                # JSON format
+                import json
+                modes_data = json.loads(modes_file_content)
+            else:
+                # YAML format - import and parse
+                try:
+                    import yaml
+                    modes_data = yaml.safe_load(modes_file_content)
+                except ImportError:
+                    # Fallback: try to parse as JSON even if it looks like YAML
+                    modes_data = json.loads(modes_file_content)
         
         if "customModes" not in modes_data:
             errors.append("modes.json missing 'customModes' key")
@@ -778,7 +804,20 @@ async def get_mode_capabilities(
             }
         
         with open(modes_path, 'r', encoding='utf-8') as f:
-            modes_data = json.load(f)
+            # Handle both JSON and YAML format
+            modes_file_content = f.read().strip()
+            if modes_file_content.startswith('{'):
+                # JSON format
+                import json
+                modes_data = json.loads(modes_file_content)
+            else:
+                # YAML format - import and parse
+                try:
+                    import yaml
+                    modes_data = yaml.safe_load(modes_file_content)
+                except ImportError:
+                    # Fallback: try to parse as JSON even if it looks like YAML
+                    modes_data = json.loads(modes_file_content)
         
         mode_capabilities = ModeCapabilities.from_dict(modes_data)
         

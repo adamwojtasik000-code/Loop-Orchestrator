@@ -54,48 +54,81 @@ class PersistentMemorySection(str, Enum):
 
 
 class ScheduleData(BaseModel):
-    """Structured model for schedule information."""
+    """Structured model for schedule information - Compatible with .roo/schedules.json format."""
     id: str
     name: str
     mode: str
-    task_instructions: str
-    schedule_type: ScheduleType
-    time_interval: Optional[int] = None
-    time_unit: Optional[str] = None
-    selected_days: Dict[str, bool] = Field(default_factory=dict)
-    start_date: Optional[str] = None
-    start_hour: Optional[str] = None
-    start_minute: str = "00"
-    expiration_date: Optional[str] = None
-    expiration_hour: Optional[str] = None
-    expiration_minute: Optional[str] = None
-    require_activity: bool = False
+    taskInstructions: str
+    scheduleType: str
+    timeInterval: Optional[int] = None
+    timeUnit: Optional[str] = None
+    selectedDays: Dict[str, bool] = Field(default_factory=dict)
+    startDate: Optional[str] = None
+    startHour: Optional[str] = None
+    startMinute: str = "00"
+    expirationDate: Optional[str] = None
+    expirationHour: Optional[str] = None
+    expirationMinute: Optional[str] = None
+    requireActivity: bool = False
     active: bool = True
-    task_interaction: str = "wait"
-    inactivity_delay: str = "3"
-    last_execution_time: Optional[str] = None
-    last_skipped_time: Optional[str] = None
-    last_task_id: Optional[str] = None
-    next_execution_time: Optional[str] = None
-    mode_display_name: Optional[str] = None
-    created_at: str
-    updated_at: str
+    taskInteraction: str = "wait"
+    inactivityDelay: str = "3"
+    lastExecutionTime: Optional[str] = None
+    lastSkippedTime: Optional[str] = None
+    lastTaskId: Optional[str] = None
+    nextExecutionTime: Optional[str] = None
+    modeDisplayName: Optional[str] = None
+    createdAt: str
+    updatedAt: str
 
-    @field_validator("time_unit")
+    @field_validator("timeUnit")
     @classmethod
     def validate_time_unit(cls, v):
         """Validate time unit values."""
         if v and v not in ["minute", "hour", "day"]:
-            raise ValueError("time_unit must be 'minute', 'hour', or 'day'")
+            raise ValueError("timeUnit must be 'minute', 'hour', or 'day'")
         return v
 
-    @field_validator("task_interaction")
+    @field_validator("timeInterval")
+    @classmethod
+    def validate_time_interval(cls, v):
+        """Validate time interval is numeric and positive."""
+        if v is not None:
+            try:
+                # Convert to int if it's a string
+                if isinstance(v, str):
+                    v = int(v)
+                if not isinstance(v, int) or v <= 0:
+                    raise ValueError("timeInterval must be a positive integer")
+            except (ValueError, TypeError):
+                raise ValueError("timeInterval must be a valid positive integer")
+        return v
+
+    @field_validator("taskInteraction")
     @classmethod
     def validate_task_interaction(cls, v):
         """Validate task interaction values."""
         if v and v not in ["wait", "interrupt", "background"]:
-            raise ValueError("task_interaction must be 'wait', 'interrupt', or 'background'")
+            raise ValueError("taskInteraction must be 'wait', 'interrupt', or 'background'")
         return v
+
+    @field_validator("scheduleType")
+    @classmethod
+    def validate_schedule_type(cls, v):
+        """Validate and convert schedule type to enum."""
+        if v is None:
+            return v
+        if isinstance(v, str):
+            # Convert string to lowercase and match enum
+            v_lower = v.lower()
+            for schedule_type in ScheduleType:
+                if schedule_type.value == v_lower:
+                    return schedule_type
+            raise ValueError(f"scheduleType '{v}' must be one of: {[st.value for st in ScheduleType]}")
+        elif isinstance(v, ScheduleType):
+            return v
+        else:
+            raise ValueError("scheduleType must be a string or ScheduleType enum value")
 
 
 class SchedulesContainer(BaseModel):
@@ -178,10 +211,10 @@ class TaskTimingContainer(BaseModel):
                     "task_id": parts[2] if len(parts) > 2 else None,
                     "start_time": parts[3] if len(parts) > 3 else "",
                     "end_time": parts[4] if len(parts) > 4 else None,
-                    "duration": int(parts[5]) if len(parts) > 5 and parts[5] else None,
+                    "duration": int(parts[5]) if len(parts) > 5 and parts[5] and parts[5].strip().isdigit() else None,
                     "task": parts[6] if len(parts) > 6 else "",
                     "result": parts[7] if len(parts) > 7 else None,
-                    "priority": parts[8] if len(parts) > 8 else None,
+                    "priority": parts[8] if len(parts) > 8 and parts[8] and parts[8].strip() in ["schedule", "todo", "normal"] else None,
                 }
                 entries.append(TaskTimingData(**entry_data))
         
@@ -275,11 +308,31 @@ class ModeCapabilities(BaseModel):
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "ModeCapabilities":
-        """Create from modes dictionary."""
+        """Create from modes dictionary with robust error handling."""
         modes = []
-        for slug, mode_data in data.get("customModes", {}).items():
-            mode_data["slug"] = slug
-            modes.append(ModeInfo(**mode_data))
+        custom_modes = data.get("customModes", {})
+        
+        if not isinstance(custom_modes, dict):
+            # Handle invalid customModes format gracefully
+            return cls(modes=[])
+            
+        for slug, mode_data in custom_modes.items():
+            try:
+                if not isinstance(mode_data, dict):
+                    # Skip invalid mode data
+                    continue
+                    
+                # Validate required fields
+                if not mode_data.get("name") or not mode_data.get("description"):
+                    # Skip modes without required fields
+                    continue
+                    
+                mode_data["slug"] = slug
+                modes.append(ModeInfo(**mode_data))
+            except (ValueError, TypeError, KeyError) as e:
+                # Skip problematic modes and continue processing others
+                continue
+                
         return cls(modes=modes)
 
     def to_dict(self) -> Dict[str, Any]:

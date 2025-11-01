@@ -102,10 +102,10 @@ async def get_schedule_status(
                     "name": schedule.name,
                     "mode": schedule.mode,
                     "status": "active" if schedule.active else "inactive",
-                    "next_execution": schedule.next_execution_time,
-                    "last_execution": schedule.last_execution_time,
-                    "created_at": schedule.created_at,
-                    "updated_at": schedule.updated_at,
+                    "next_execution": getattr(schedule, 'next_execution_time', None),
+                    "last_execution": getattr(schedule, 'last_execution_time', None),
+                    "created_at": getattr(schedule, 'created_at', None),
+                    "updated_at": getattr(schedule, 'updated_at', None),
                     "task_instructions_preview": schedule.task_instructions[:200] + "..." if len(schedule.task_instructions) > 200 else schedule.task_instructions
                 }
                 formatted_schedules.append(formatted_schedule)
@@ -307,7 +307,7 @@ async def track_task_time(
                 "start_time": current_timestamp,
                 "task": task_description,
                 "result": "started",
-                "priority": priority.value
+                "priority": priority.value if hasattr(priority, 'value') else str(priority)
             }
             
             # Load existing timing data
@@ -367,7 +367,7 @@ async def track_task_time(
             "task_id": task_id,
             "task_description": task_description,
             "mode": mode,
-            "priority": priority.value,
+            "priority": priority.value if hasattr(priority, 'value') else str(priority),
             "timestamp": current_timestamp,
             "duration": calculate_duration(started_entry.start_time, current_timestamp) if not start_tracking else None
         }
@@ -709,19 +709,19 @@ async def update_persistent_memory(
         # Read existing content
         if memory_path.exists():
             with open(memory_path, 'r', encoding='utf-8') as f:
-                content = f.read()
+                existing_content = f.read()
         else:
-            content = ""
+            existing_content = ""
         
         # Ensure section exists
         section_name = section.value
         section_header = f"# {section_name}"
         
-        if section_header not in content:
-            content += f"\n{section_header}\n\n"
+        if section_header not in existing_content:
+            existing_content += f"\n{section_header}\n\n"
         else:
             # Ensure section has proper formatting
-            content = re.sub(rf'\n{section_header}\n*', f'\n{section_header}\n', content)
+            existing_content = re.sub(rf'\n{section_header}\n*', f'\n{section_header}\n', existing_content)
         
         # Format new entry
         timestamp = format_timestamp()
@@ -732,15 +732,15 @@ async def update_persistent_memory(
         
         # Append to appropriate section
         section_pattern = rf'(# {section_name}\n)(.*?)(?=\n#|\Z)'
-        match = re.search(section_pattern, content, re.DOTALL)
+        match = re.search(section_pattern, existing_content, re.DOTALL)
         
         if match:
             # Section exists, append to it
             section_content = match.group(2)
-            updated_content = content.replace(section_content, section_content + formatted_entry)
+            updated_content = existing_content.replace(section_content, section_content + formatted_entry)
         else:
             # Section doesn't exist, add it
-            updated_content = content + formatted_entry
+            updated_content = existing_content + formatted_entry
         
         # Check line limit
         line_count = len(updated_content.split('\n'))
