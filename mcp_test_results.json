@@ -1,0 +1,536 @@
+{
+  "summary": {
+    "total_tests": 28,
+    "passed_tests": 25,
+    "failed_tests": 3,
+    "partial_tests": 0,
+    "success_rate": "89.3%",
+    "timestamp": 1761971373.5357223
+  },
+  "categories": {
+    "Orchestrator": {
+      "PASS": 8,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "get_schedule_status",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 0 schedules",
+          "duration": 0.045993804931640625,
+          "timestamp": 1761971370.2098835
+        },
+        {
+          "test_name": "manage_schedules_create",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Created schedule: N/A",
+          "duration": 0.2214658260345459,
+          "timestamp": 1761971370.4390368
+        },
+        {
+          "test_name": "track_task_time",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Time tracking started: False",
+          "duration": 0.003477811813354492,
+          "timestamp": 1761971370.4479575
+        },
+        {
+          "test_name": "get_time_tracking",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 0 records",
+          "duration": 0.007065534591674805,
+          "timestamp": 1761971370.4683833
+        },
+        {
+          "test_name": "get_persistent_memory",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 3 sections",
+          "duration": 0.0009000301361083984,
+          "timestamp": 1761971370.4770844
+        },
+        {
+          "test_name": "update_persistent_memory",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Entry added at line: N/A",
+          "duration": 0.01496124267578125,
+          "timestamp": 1761971370.5005996
+        },
+        {
+          "test_name": "get_todo_status",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Found 19 TODO items",
+          "duration": 0.00054931640625,
+          "timestamp": 1761971370.5112467
+        },
+        {
+          "test_name": "delegate_task",
+          "category": "Orchestrator",
+          "status": "PASS",
+          "details": "Delegated to mode: N/A",
+          "duration": 0.011380195617675781,
+          "timestamp": 1761971370.5289378
+        }
+      ]
+    },
+    "File System": {
+      "PASS": 6,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "read_project_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Read 10193 characters",
+          "duration": 0.000240325927734375,
+          "timestamp": 1761971370.5378394
+        },
+        {
+          "test_name": "list_project_structure",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Found 0 items",
+          "duration": 0.0027933120727539062,
+          "timestamp": 1761971370.8685927
+        },
+        {
+          "test_name": "search_in_files",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Found 5 matches",
+          "duration": 0.0033600330352783203,
+          "timestamp": 1761971370.8762357
+        },
+        {
+          "test_name": "write_project_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "File written: True",
+          "duration": 0.0009169578552246094,
+          "timestamp": 1761971370.8855739
+        },
+        {
+          "test_name": "backup_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Backup created: True",
+          "duration": 0.005562782287597656,
+          "timestamp": 1761971370.899851
+        },
+        {
+          "test_name": "restore_file",
+          "category": "File System",
+          "status": "PASS",
+          "details": "Restore successful: True",
+          "duration": 0.0072405338287353516,
+          "timestamp": 1761971370.9100773
+        }
+      ]
+    },
+    "Development": {
+      "PASS": 6,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "get_system_status",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Status: unknown",
+          "duration": 1.027359962463379,
+          "timestamp": 1761971371.9455802
+        },
+        {
+          "test_name": "get_mode_capabilities",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Found 0 modes",
+          "duration": 0.003865480422973633,
+          "timestamp": 1761971371.9526176
+        },
+        {
+          "test_name": "switch_mode",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Mode switched to: N/A",
+          "duration": 0.0033156871795654297,
+          "timestamp": 1761971371.9610367
+        },
+        {
+          "test_name": "run_validation",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Validation passed: False",
+          "duration": 0.00015687942504882812,
+          "timestamp": 1761971371.966958
+        },
+        {
+          "test_name": "error_recovery",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Recovery action: none",
+          "duration": 0.1850898265838623,
+          "timestamp": 1761971372.158099
+        },
+        {
+          "test_name": "sync_environment",
+          "category": "Development",
+          "status": "PASS",
+          "details": "Sync completed: False",
+          "duration": 1.0452027320861816,
+          "timestamp": 1761971373.216676
+        }
+      ]
+    },
+    "Integration": {
+      "PASS": 5,
+      "FAIL": 0,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "integrate_schedules",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 5885 characters",
+          "duration": 0.00029754638671875,
+          "timestamp": 1761971373.2224965
+        },
+        {
+          "test_name": "integrate_time_tracking",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 3609 characters",
+          "duration": 0.00024080276489257812,
+          "timestamp": 1761971373.2280176
+        },
+        {
+          "test_name": "integrate_persistent_memory",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 18083 characters",
+          "duration": 0.00039839744567871094,
+          "timestamp": 1761971373.2336838
+        },
+        {
+          "test_name": "integrate_todo",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Read 9944 characters",
+          "duration": 0.00022745132446289062,
+          "timestamp": 1761971373.2394674
+        },
+        {
+          "test_name": "integrate_server_files",
+          "category": "Integration",
+          "status": "PASS",
+          "details": "Accessed 0 items",
+          "duration": 0.0006892681121826172,
+          "timestamp": 1761971373.2454386
+        }
+      ]
+    },
+    "Error Handling": {
+      "PASS": 0,
+      "FAIL": 3,
+      "PARTIAL": 0,
+      "tests": [
+        {
+          "test_name": "Invalid file path",
+          "category": "Error Handling",
+          "status": "FAIL",
+          "details": "Expected error but none occurred",
+          "duration": 0.00021004676818847656,
+          "timestamp": 1761971373.2539034
+        },
+        {
+          "test_name": "Invalid schedule ID",
+          "category": "Error Handling",
+          "status": "FAIL",
+          "details": "Expected error but none occurred",
+          "duration": 0.028538942337036133,
+          "timestamp": 1761971373.523038
+        },
+        {
+          "test_name": "Invalid validation type",
+          "category": "Error Handling",
+          "status": "FAIL",
+          "details": "Expected error but none occurred",
+          "duration": 9.560585021972656e-05,
+          "timestamp": 1761971373.5264878
+        }
+      ]
+    }
+  },
+  "detailed_results": [
+    {
+      "test_name": "get_schedule_status",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 0 schedules",
+      "duration": 0.045993804931640625,
+      "timestamp": 1761971370.2098835
+    },
+    {
+      "test_name": "manage_schedules_create",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Created schedule: N/A",
+      "duration": 0.2214658260345459,
+      "timestamp": 1761971370.4390368
+    },
+    {
+      "test_name": "track_task_time",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Time tracking started: False",
+      "duration": 0.003477811813354492,
+      "timestamp": 1761971370.4479575
+    },
+    {
+      "test_name": "get_time_tracking",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 0 records",
+      "duration": 0.007065534591674805,
+      "timestamp": 1761971370.4683833
+    },
+    {
+      "test_name": "get_persistent_memory",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 3 sections",
+      "duration": 0.0009000301361083984,
+      "timestamp": 1761971370.4770844
+    },
+    {
+      "test_name": "update_persistent_memory",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Entry added at line: N/A",
+      "duration": 0.01496124267578125,
+      "timestamp": 1761971370.5005996
+    },
+    {
+      "test_name": "get_todo_status",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Found 19 TODO items",
+      "duration": 0.00054931640625,
+      "timestamp": 1761971370.5112467
+    },
+    {
+      "test_name": "delegate_task",
+      "category": "Orchestrator",
+      "status": "PASS",
+      "details": "Delegated to mode: N/A",
+      "duration": 0.011380195617675781,
+      "timestamp": 1761971370.5289378
+    },
+    {
+      "test_name": "read_project_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Read 10193 characters",
+      "duration": 0.000240325927734375,
+      "timestamp": 1761971370.5378394
+    },
+    {
+      "test_name": "list_project_structure",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Found 0 items",
+      "duration": 0.0027933120727539062,
+      "timestamp": 1761971370.8685927
+    },
+    {
+      "test_name": "search_in_files",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Found 5 matches",
+      "duration": 0.0033600330352783203,
+      "timestamp": 1761971370.8762357
+    },
+    {
+      "test_name": "write_project_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "File written: True",
+      "duration": 0.0009169578552246094,
+      "timestamp": 1761971370.8855739
+    },
+    {
+      "test_name": "backup_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Backup created: True",
+      "duration": 0.005562782287597656,
+      "timestamp": 1761971370.899851
+    },
+    {
+      "test_name": "restore_file",
+      "category": "File System",
+      "status": "PASS",
+      "details": "Restore successful: True",
+      "duration": 0.0072405338287353516,
+      "timestamp": 1761971370.9100773
+    },
+    {
+      "test_name": "get_system_status",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Status: unknown",
+      "duration": 1.027359962463379,
+      "timestamp": 1761971371.9455802
+    },
+    {
+      "test_name": "get_mode_capabilities",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Found 0 modes",
+      "duration": 0.003865480422973633,
+      "timestamp": 1761971371.9526176
+    },
+    {
+      "test_name": "switch_mode",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Mode switched to: N/A",
+      "duration": 0.0033156871795654297,
+      "timestamp": 1761971371.9610367
+    },
+    {
+      "test_name": "run_validation",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Validation passed: False",
+      "duration": 0.00015687942504882812,
+      "timestamp": 1761971371.966958
+    },
+    {
+      "test_name": "error_recovery",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Recovery action: none",
+      "duration": 0.1850898265838623,
+      "timestamp": 1761971372.158099
+    },
+    {
+      "test_name": "sync_environment",
+      "category": "Development",
+      "status": "PASS",
+      "details": "Sync completed: False",
+      "duration": 1.0452027320861816,
+      "timestamp": 1761971373.216676
+    },
+    {
+      "test_name": "integrate_schedules",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 5885 characters",
+      "duration": 0.00029754638671875,
+      "timestamp": 1761971373.2224965
+    },
+    {
+      "test_name": "integrate_time_tracking",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 3609 characters",
+      "duration": 0.00024080276489257812,
+      "timestamp": 1761971373.2280176
+    },
+    {
+      "test_name": "integrate_persistent_memory",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 18083 characters",
+      "duration": 0.00039839744567871094,
+      "timestamp": 1761971373.2336838
+    },
+    {
+      "test_name": "integrate_todo",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Read 9944 characters",
+      "duration": 0.00022745132446289062,
+      "timestamp": 1761971373.2394674
+    },
+    {
+      "test_name": "integrate_server_files",
+      "category": "Integration",
+      "status": "PASS",
+      "details": "Accessed 0 items",
+      "duration": 0.0006892681121826172,
+      "timestamp": 1761971373.2454386
+    },
+    {
+      "test_name": "Invalid file path",
+      "category": "Error Handling",
+      "status": "FAIL",
+      "details": "Expected error but none occurred",
+      "duration": 0.00021004676818847656,
+      "timestamp": 1761971373.2539034
+    },
+    {
+      "test_name": "Invalid schedule ID",
+      "category": "Error Handling",
+      "status": "FAIL",
+      "details": "Expected error but none occurred",
+      "duration": 0.028538942337036133,
+      "timestamp": 1761971373.523038
+    },
+    {
+      "test_name": "Invalid validation type",
+      "category": "Error Handling",
+      "status": "FAIL",
+      "details": "Expected error but none occurred",
+      "duration": 9.560585021972656e-05,
+      "timestamp": 1761971373.5264878
+    }
+  ],
+  "server_config": {
+    "name": "Loop-Orchestrator MCP Server",
+    "instructions": "Comprehensive MCP server providing orchestrator management, file system access, and development tools for the Loop-Orchestrator project",
+    "version": "1.0.0",
+    "transport": "stdio",
+    "base_port": 8080,
+    "workspace_path": "/workspaces/Loop-Orchestrator",
+    "file_paths": {
+      "schedules": ".roo/schedules.json",
+      "task_timing": "task_timing.tsv",
+      "persistent_memory": "persistent-memory.md",
+      "todo": "TODO.md",
+      "modes": ".roomodes",
+      "backups": "backups"
+    },
+    "system_settings": {
+      "python_version_min": "3.10.0",
+      "command_failure_limit": 3,
+      "time_tracking_enabled": true,
+      "persistent_memory_max_lines": 300
+    },
+    "performance_settings": {
+      "operation_timeout": 300,
+      "max_concurrent_operations": 5,
+      "cache_enabled": true,
+      "cache_ttl": 300
+    },
+    "workflow_settings": {
+      "workflow_stages": [
+        "Implementation",
+        "Validation",
+        "Quality",
+        "Integration",
+        "Planning"
+      ],
+      "mode_delegation_enabled": true,
+      "enhanced_reasoning_enabled": true
+    }
+  }
+}

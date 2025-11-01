@@ -1,0 +1,12 @@
+{
+  "operation": "test_operation",
+  "error_context": {
+    "error": "Test error for recovery"
+  },
+  "timestamp": "2025-11-01T04:13:15.052743Z",
+  "system_state": {
+    "success": false,
+    "error": "5 validation errors for SystemStatus\nfile_permissions.schedules\n  Input should be a valid boolean [type=bool_type, input_value={'readable': True, 'writable': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/bool_type\nfile_permissions.task_timing\n  Input should be a valid boolean [type=bool_type, input_value={'readable': True, 'writable': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/bool_type\nfile_permissions.persistent_memory\n  Input should be a valid boolean [type=bool_type, input_value={'readable': True, 'writable': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/bool_type\nfile_permissions.todo\n  Input should be a valid boolean [type=bool_type, input_value={'readable': True, 'writable': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/bool_type\nfile_permissions.modes\n  Input should be a valid boolean [type=bool_type, input_value={'readable': True, 'writable': True}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.12/v/bool_type",
+    "timestamp": "2025-11-01T04:13:15.053089Z"
+  }
+}

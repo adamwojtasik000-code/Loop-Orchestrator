@@ -1,0 +1,209 @@
+# System Refactoring Plan: Resolving schedules.json vs orchestrator.md Contradictions
+
+## Executive Summary
+
+Based on 20 clarifying questions, this plan implements a **schedule-driven hierarchy** with comprehensive system unification. The refactoring addresses 6 major contradictions through simultaneous implementation of 20 specific architectural decisions.
+
+## Core Architecture Decisions
+
+### 1. Primary System Hierarchy
+- **Primary**: schedules.json (schedule-driven automation)
+- **Secondary**: TODO.md (planning/oversight checklist)
+- **Integration**: Persistent-memory.md (universal logging for both)
+
+### 2. Implementation Approach
+- **Strategy**: All changes implemented simultaneously
+- **Documentation**: Update both documents with cross-references
+- **Timeline**: Single atomic refactoring operation
+
+## Detailed Resolution Strategy
+
+### Contradiction 1: Task Source Authority
+**Resolution**: Hierarchical task source system
+- **Execution Tasks**: schedules.json has absolute authority
+- **Planning/Oversight**: TODO.md provides strategic direction
+- **Integration**: schedules can reference TODO items but maintain autonomy
+
+### Contradiction 2: Workflow Stages  
+**Resolution**: Unified workflow with schedule-driven progression
+- **Primary Workflow**: Implementation → Validation → Quality → Integration → Planning → [Loop]
+- **Orchestrator Update**: Reference schedule stages, remove conflicting planning-first approach
+- **Authority**: schedules.json sets the workflow standard
+
+### Contradiction 3: Mode Delegation
+**Resolution**: Universal mandatory delegation
+- **Policy**: ALL work delegated to specialized modes using `new_task`
+- **Scope**: Applies to both schedule and TODO tasks
+- **Implementation**: Remove "aligned with TODO categories" qualifier from orchestrator.md
+
+### Contradiction 4: Automation Level
+**Resolution**: Autonomous execution with enhanced reasoning
+- **Schedule Execution**: Maintains 10-minute autonomous intervals
+- **Manual Oversight**: Removed from orchestrator.md requirements
+- **Enhanced Reasoning**: Additional reasoning mode for contextual decision-making
+- **Human Interaction**: Maintained through TODO.md planning/oversight role
+
+### Contradiction 5: Time Tracking Priority
+**Resolution**: Dual-tracking system with hierarchy
+- **Schedule Tasks**: Time tracking as TOP PRIORITY standalone operation
+- **TODO Tasks**: Integrated time tracking system (maintained from orchestrator.md)
+- **Implementation**: Both systems use task_timing.tsv with different priority levels
+
+### Contradiction 6: Question Protocol
+**Resolution**: Enhanced reasoning mode integration
+- **Approach**: Replace rigid 3-question requirement with enhanced reasoning mode
+- **Implementation**: Contextual questioning based on task complexity and system state
+- **Authority**: Enhanced reasoning mode handles decision-making for both systems
+
+## System Integration Specifications
+
+### 1. Task Management Hierarchy
+```
+Schedule-Driven Workflow (Primary)
+├── Autonomous Execution (10-minute intervals)
+├── Mandatory Mode Delegation
+├── TOP PRIORITY Time Tracking
+├── Automatic Dependency Resolution
+├── Universal Cycle Detection
+├── Universal Error Handling (3 failures + escalation)
+└── Universal Rollback Triggers
+
+TODO-Driven Planning (Secondary)
+├── Strategic Task Definition
+├── Planning and Oversight
+├── Acceptance Criteria Validation
+├── Integrated Time Tracking
+└── Checklist-Based Progress Monitoring
+```
+
+### 2. Protocol Unification
+
+#### Universal 5-Level Subtask Management
+- **Depth Limit**: 5 levels maximum across both systems
+- **Resource Allocation**: Standardized across all task types
+- **Cycle Detection**: Universal implementation from schedules.json
+
+#### Environment Synchronization
+- **Requirement**: Universal synchronization across both systems
+- **Timing**: Required at planning, implementation, validation, integration stages
+- **Failure Handling**: Synchronization required but non-blocking per schedules.json
+
+#### Inter-Mode Communication
+- **Protocol**: Clear data exchange protocols with validation and acknowledgment
+- **Scope**: Universal application across all mode interactions
+- **Implementation**: Adopted from schedules.json requirements
+
+### 3. Persistent Memory Integration
+- **Single System**: persistent-memory.md handles both schedule and TODO logging
+- **Format Differentiation**: Different entry formats for each workflow type
+- **Universal Usage**: Both systems append to same persistent memory
+
+### 4. Time Management Unification
+- **Schedule Tasks**: TOP PRIORITY tracking with atomic operations
+- **TODO Tasks**: Integrated tracking with 3600s enforcement
+- **Common Elements**: Both use task_timing.tsv with different priority levels
+
+## Implementation Files Changes
+
+### 1. schedules.json Updates
+**Changes Required**:
+- Add persistent-memory.md integration references
+- Update time tracking to acknowledge dual-priority system
+- Add TODO.md coordination points
+- Implement enhanced reasoning mode integration points
+
+### 2. orchestrator.md Updates  
+**Changes Required**:
+- Remove "central component" language for TODO.md
+- Update workflow to reference schedule stages
+- Remove manual oversight requirements
+- Add schedule system hierarchy references
+- Update time tracking to acknowledge schedule priority
+- Remove conflicting protocol requirements
+
+### 3. TODO.md Updates
+**Changes Required**:
+- Update language to reflect secondary/planning role
+- Add schedule coordination references
+- Maintain checklist functionality for planning/oversight
+
+### 4. task_timing.tsv Integration
+**Changes Required**:
+- Add priority level field to distinguish schedule vs TODO tracking
+- Implement dual-priority system in logging
+
+### 5. persistent-memory.md Integration
+**Changes Required**:
+- Add schedule execution logging format
+- Ensure compatibility with both workflow types
+- Update integration patterns section
+
+## Risk Mitigation
+
+### 1. Atomic Implementation
+- **Approach**: All changes implemented simultaneously to avoid partial state
+- **Backup**: Create system snapshots before refactoring
+- **Rollback**: Universal rollback triggers ready for immediate activation
+
+### 2. Testing Strategy
+- **Schedule Workflow**: Verify autonomous execution continues
+- **TODO Planning**: Ensure planning/oversight functionality maintained
+- **Integration Points**: Test cross-system communication
+- **Time Tracking**: Verify dual-priority system operates correctly
+
+### 3. Monitoring and Validation
+- **Real-time Monitoring**: Track system performance during refactoring
+- **Error Detection**: Enhanced error handling with universal escalation
+- **Performance Validation**: Ensure no degradation in system capabilities
+
+## Success Criteria
+
+### 1. Contradiction Elimination
+- [ ] All 6 major contradictions resolved
+- [ ] No competing authorities for task initiation
+- [ ] Unified workflow progression
+- [ ] Clear system hierarchy established
+
+### 2. Functional Validation
+- [ ] Schedule-driven autonomous execution maintained
+- [ ] TODO planning/oversight functionality preserved
+- [ ] Time tracking dual-priority system operational
+- [ ] Enhanced reasoning mode integrated successfully
+
+### 3. Performance Metrics
+- [ ] No degradation in system responsiveness
+- [ ] Maintained 10-minute schedule intervals
+- [ ] Preserved 3600s time enforcement for TODO tasks
+- [ ] Universal error handling operational
+
+## Timeline and Execution
+
+### Phase 1: Pre-Implementation
+1. **System Snapshot**: Create backup of current system state
+2. **Change Validation**: Verify all 20 architectural decisions
+3. **Implementation Planning**: Prepare simultaneous change deployment
+
+### Phase 2: Atomic Implementation
+1. **schedules.json Updates**: Implement hierarchy and integration points
+2. **orchestrator.md Updates**: Remove contradictions, add hierarchy references
+3. **TODO.md Updates**: Update to secondary role language
+4. **System Integration**: Deploy enhanced reasoning mode
+5. **Testing Validation**: Verify all systems operational
+
+### Phase 3: Post-Implementation Validation
+1. **Functionality Testing**: Verify all core workflows operational
+2. **Performance Validation**: Ensure no degradation
+3. **Contradiction Verification**: Confirm all conflicts resolved
+4. **Documentation Update**: Ensure cross-references accurate
+
+## Conclusion
+
+This refactoring plan resolves all 6 major contradictions through systematic implementation of schedule-driven hierarchy with enhanced reasoning mode integration. The simultaneous implementation approach minimizes risk while establishing clear system authority and eliminating operational conflicts.
+
+**Key Success Factors**:
+- Schedule-driven hierarchy with TODO.md as planning support
+- Universal protocols with enhanced reasoning mode
+- Integrated persistent memory and time tracking systems
+- Atomic implementation with comprehensive validation
+
+The refactored system will provide autonomous schedule-driven execution with human planning oversight, eliminating the architectural conflicts that currently undermine system reliability and operational clarity.
