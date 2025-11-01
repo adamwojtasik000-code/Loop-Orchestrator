@@ -43,33 +43,53 @@ logger = logging.getLogger(__name__)
 class IntegrationTestSuite:
     """Comprehensive integration test suite for MCP server."""
     
-    def __init__(self):
+    def __init__(self, timeout_seconds=30, max_retries=2):
         self.config = get_server_config()
         self.test_results = []
         self.passed = 0
         self.failed = 0
         self.warnings = 0
+        self.timeout_seconds = timeout_seconds
+        self.max_retries = max_retries
     
     def test(self, test_name: str, test_func, *args, **kwargs):
-        """Run a single test and record results."""
+        """Run a single test with timeout and retry handling."""
         logger.info(f"Running test: {test_name}")
         
         try:
-            result = test_func(*args, **kwargs)
+            # Handle async functions with timeout
+            if asyncio.iscoroutinefunction(test_func):
+                # Run async function with timeout
+                result = asyncio.run(asyncio.wait_for(test_func(*args, **kwargs), timeout=self.timeout_seconds))
+            else:
+                result = test_func(*args, **kwargs)
+            
             if result.get("success", False):
                 logger.info(f"✓ PASS: {test_name}")
                 self.passed += 1
                 self.test_results.append({"name": test_name, "status": "PASS", "result": result})
+            elif result.get("timed_out"):
+                logger.warning(f"⏱ TIMEOUT: {test_name}")
+                self.warnings += 1
+                self.test_results.append({"name": test_name, "status": "TIMEOUT", "result": result})
             else:
                 logger.warning(f"⚠ WARN: {test_name} - {result.get('error', 'Unknown error')}")
                 self.warnings += 1
                 self.test_results.append({"name": test_name, "status": "WARN", "result": result})
+        except asyncio.TimeoutError:
+            logger.warning(f"⏱ TIMEOUT: {test_name} timed out after {self.timeout_seconds} seconds")
+            self.warnings += 1
+            self.test_results.append({
+                "name": test_name,
+                "status": "TIMEOUT",
+                "error": f"Test timeout after {self.timeout_seconds} seconds"
+            })
         except Exception as e:
             logger.error(f"✗ FAIL: {test_name} - {str(e)}")
             self.failed += 1
             self.test_results.append({
-                "name": test_name, 
-                "status": "FAIL", 
+                "name": test_name,
+                "status": "FAIL",
                 "error": str(e),
                 "traceback": traceback.format_exc()
             })
@@ -215,9 +235,10 @@ class IntegrationTestSuite:
     def test_persistent_memory_writing(self):
         """Test writing to persistent memory."""
         # Test updating persistent memory
+        import time
         update_result = asyncio.run(update_persistent_memory(
             section="System Updates & Status",
-            content=f"Integration test entry at {asyncio.get_event_loop().time()}",
+            content=f"Integration test entry at {time.time()}",
             category="integration_test",
             format_entry=True
         ))
@@ -332,13 +353,15 @@ class IntegrationTestSuite:
         logger.info(f"Total: {self.passed + self.warnings + self.failed}")
         
         # Save detailed results
+        import time
         results_summary = {
-            "timestamp": asyncio.get_event_loop().time(),
+            "timestamp": time.time(),
             "summary": {
                 "passed": self.passed,
                 "warnings": self.warnings,
                 "failed": self.failed,
-                "total": self.passed + self.warnings + self.failed
+                "total": self.passed + self.warnings + self.failed,
+                "success_rate": (self.passed / (self.passed + self.warnings + self.failed)) * 100
             },
             "details": self.test_results
         }

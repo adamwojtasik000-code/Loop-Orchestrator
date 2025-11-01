@@ -1,0 +1,129 @@
+{
+  "summary": {
+    "total_tests": 16,
+    "passed": 8,
+    "failed": 8,
+    "success_rate": 50.0,
+    "total_duration": 0.0641624927520752,
+    "timestamp": 1762010303.3580966
+  },
+  "test_results": [
+    {
+      "test_name": "Server Initialization",
+      "success": true,
+      "details": "Validation: valid, Config: Loop-Orchestrator MCP Server v1.0.0",
+      "duration": 0.048100948333740234,
+      "timestamp": 1762010303.3420098
+    },
+    {
+      "test_name": "Tool Availability Check",
+      "success": true,
+      "details": "Found 20 tools (expected 20): 20/20 registered - Orchestrator: 8, Filesystem: 6, Development: 6",
+      "duration": 2.1457672119140625e-06,
+      "timestamp": 1762010303.3420424
+    },
+    {
+      "test_name": "Orchestrator: Get Schedule Status",
+      "success": false,
+      "details": "Result type: coroutine, Keys: N/A",
+      "duration": 1.1205673217773438e-05,
+      "timestamp": 1762010303.3420699
+    },
+    {
+      "test_name": "Orchestrator: Get Todo Status",
+      "success": false,
+      "details": "Result type: coroutine, Keys: N/A",
+      "duration": 0.0002472400665283203,
+      "timestamp": 1762010303.3423283
+    },
+    {
+      "test_name": "Orchestrator: Get Persistent Memory",
+      "success": false,
+      "details": "Result type: coroutine, Keys: N/A",
+      "duration": 4.38690185546875e-05,
+      "timestamp": 1762010303.3423915
+    },
+    {
+      "test_name": "Orchestrator: Get Time Tracking",
+      "success": false,
+      "details": "Result type: coroutine, Keys: N/A",
+      "duration": 2.47955322265625e-05,
+      "timestamp": 1762010303.3424265
+    },
+    {
+      "test_name": "Orchestrator: Get Mode Capabilities",
+      "success": false,
+      "details": "Result type: coroutine, Keys: N/A",
+      "duration": 2.6941299438476562e-05,
+      "timestamp": 1762010303.3424666
+    },
+    {
+      "test_name": "Filesystem: Read Project File",
+      "success": true,
+      "details": "File read: task_timing.tsv",
+      "duration": 0.00025582313537597656,
+      "timestamp": 1762010303.3427656
+    },
+    {
+      "test_name": "Filesystem: List Project Structure",
+      "success": false,
+      "details": "Error: object of type 'int' has no len()",
+      "duration": 0.011722326278686523,
+      "timestamp": 1762010303.3545053
+    },
+    {
+      "test_name": "Development: Get System Status",
+      "success": false,
+      "details": "Result keys: N/A",
+      "duration": 1.049041748046875e-05,
+      "timestamp": 1762010303.3545716
+    },
+    {
+      "test_name": "Development: Run Validation",
+      "success": false,
+      "details": "Result keys: N/A",
+      "duration": 4.863739013671875e-05,
+      "timestamp": 1762010303.354639
+    },
+    {
+      "test_name": "Roocode Integration: Schedule Management",
+      "success": true,
+      "details": "Integration test completed successfully",
+      "duration": 0.00034546852111816406,
+      "timestamp": 1762010303.3550282
+    },
+    {
+      "test_name": "Roocode Integration: Time Tracking",
+      "success": true,
+      "details": "Integration test completed successfully",
+      "duration": 0.0004956722259521484,
+      "timestamp": 1762010303.3556387
+    },
+    {
+      "test_name": "Roocode Integration: Persistent Memory",
+      "success": true,
+      "details": "Integration test completed successfully",
+      "duration": 0.0013241767883300781,
+      "timestamp": 1762010303.3569837
+    },
+    {
+      "test_name": "Roocode Integration: Backup System",
+      "success": true,
+      "details": "Integration test completed successfully",
+      "duration": 0.00084686279296875,
+      "timestamp": 1762010303.3578503
+    },
+    {
+      "test_name": "Error Handling",
+      "success": true,
+      "details": "Error handling: Working",
+      "duration": 0.00014162063598632812,
+      "timestamp": 1762010303.3580196
+    }
+  ],
+  "environment": {
+    "python_version": "3.12.1 (main, Jul 10 2025, 11:57:50) [GCC 13.3.0]",
+    "mcp_available": true,
+    "workspace_path": "/workspaces/Loop-Orchestrator"
+  }
+}

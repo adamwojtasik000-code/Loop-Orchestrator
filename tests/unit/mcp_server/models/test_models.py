@@ -75,12 +75,12 @@ class TestScheduleData:
             "id": "test-id",
             "name": "Test Schedule",
             "mode": "test-mode",
-            "task_instructions": "test instructions",
-            "schedule_type": ScheduleType.TIME,
-            "start_hour": "10:00",
-            "start_minute": "00",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
+            "taskInstructions": "test instructions",
+            "scheduleType": ScheduleType.TIME,
+            "startHour": "10:00",
+            "startMinute": "00",
+            "createdAt": "2023-01-01T00:00:00Z",
+            "updatedAt": "2023-01-01T00:00:00Z"
         }
         schedule = ScheduleData(**data)
         assert schedule.id == "test-id"
@@ -93,17 +93,17 @@ class TestScheduleData:
             "id": "test-id",
             "name": "Test Schedule",
             "mode": "test-mode",
-            "task_instructions": "test instructions",
-            "schedule_type": ScheduleType.INTERVAL,
-            "time_interval": 30,
-            "time_unit": "minute",
-            "require_activity": True,
+            "taskInstructions": "test instructions",
+            "scheduleType": ScheduleType.INTERVAL,
+            "timeInterval": 30,
+            "timeUnit": "minute",
+            "requireActivity": True,
             "active": False,
-            "task_interaction": "interrupt",
-            "start_hour": "09:00",
-            "start_minute": "30",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
+            "taskInteraction": "interrupt",
+            "startHour": "09:00",
+            "startMinute": "30",
+            "createdAt": "2023-01-01T00:00:00Z",
+            "updatedAt": "2023-01-01T00:00:00Z"
         }
         schedule = ScheduleData(**data)
         assert schedule.time_interval == 30
@@ -118,11 +118,11 @@ class TestScheduleData:
             "id": "test-id",
             "name": "Test Schedule",
             "mode": "test-mode",
-            "task_instructions": "test instructions",
-            "schedule_type": ScheduleType.MANUAL,
-            "start_minute": "00",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
+            "taskInstructions": "test instructions",
+            "scheduleType": ScheduleType.MANUAL,
+            "startMinute": "00",
+            "createdAt": "2023-01-01T00:00:00Z",
+            "updatedAt": "2023-01-01T00:00:00Z"
         }
         schedule = ScheduleData(**data)
         assert schedule.start_minute == "00"
@@ -137,12 +137,12 @@ class TestScheduleData:
             "id": "test-id",
             "name": "Test Schedule",
             "mode": "test-mode",
-            "task_instructions": "test instructions",
-            "schedule_type": ScheduleType.INTERVAL,
-            "time_unit": "hour",
-            "start_minute": "00",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
+            "taskInstructions": "test instructions",
+            "scheduleType": ScheduleType.INTERVAL,
+            "timeUnit": "hour",
+            "startMinute": "00",
+            "createdAt": "2023-01-01T00:00:00Z",
+            "updatedAt": "2023-01-01T00:00:00Z"
         }
         schedule = ScheduleData(**data)
         assert schedule.time_unit == "hour"
@@ -153,12 +153,12 @@ class TestScheduleData:
             "id": "test-id",
             "name": "Test Schedule",
             "mode": "test-mode",
-            "task_instructions": "test instructions",
-            "schedule_type": ScheduleType.INTERVAL,
-            "time_unit": "invalid_unit",
-            "start_minute": "00",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
+            "taskInstructions": "test instructions",
+            "scheduleType": ScheduleType.INTERVAL,
+            "timeUnit": "invalid_unit",
+            "startMinute": "00",
+            "createdAt": "2023-01-01T00:00:00Z",
+            "updatedAt": "2023-01-01T00:00:00Z"
         }
         with pytest.raises(ValueError, match="time_unit must be 'minute', 'hour', or 'day'"):
             ScheduleData(**data)
@@ -169,12 +169,12 @@ class TestScheduleData:
             "id": "test-id",
             "name": "Test Schedule",
             "mode": "test-mode",
-            "task_instructions": "test instructions",
-            "schedule_type": ScheduleType.TIME,
-            "task_interaction": "background",
-            "start_minute": "00",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
+            "taskInstructions": "test instructions",
+            "scheduleType": ScheduleType.TIME,
+            "taskInteraction": "background",
+            "startMinute": "00",
+            "createdAt": "2023-01-01T00:00:00Z",
+            "updatedAt": "2023-01-01T00:00:00Z"
         }
         schedule = ScheduleData(**data)
         assert schedule.task_interaction == "background"
@@ -185,12 +185,12 @@ class TestScheduleData:
             "id": "test-id",
             "name": "Test Schedule",
             "mode": "test-mode",
-            "task_instructions": "test instructions",
-            "schedule_type": ScheduleType.TIME,
-            "task_interaction": "invalid_interaction",
-            "start_minute": "00",
-            "created_at": "2023-01-01T00:00:00Z",
-            "updated_at": "2023-01-01T00:00:00Z"
+            "taskInstructions": "test instructions",
+            "scheduleType": ScheduleType.TIME,
+            "taskInteraction": "invalid_interaction",
+            "startMinute": "00",
+            "createdAt": "2023-01-01T00:00:00Z",
+            "updatedAt": "2023-01-01T00:00:00Z"
         }
         with pytest.raises(ValueError, match="task_interaction must be 'wait', 'interrupt', or 'background'"):
             ScheduleData(**data)
@@ -211,21 +211,21 @@ class TestSchedulesContainer:
                 "id": "id1",
                 "name": "Schedule 1",
                 "mode": "mode1",
-                "task_instructions": "instructions 1",
-                "schedule_type": ScheduleType.MANUAL,
-                "start_minute": "00",
-                "created_at": "2023-01-01T00:00:00Z",
-                "updated_at": "2023-01-01T00:00:00Z"
+                "taskInstructions": "instructions 1",
+                "scheduleType": ScheduleType.MANUAL,
+                "startMinute": "00",
+                "createdAt": "2023-01-01T00:00:00Z",
+                "updatedAt": "2023-01-01T00:00:00Z"
             },
             {
                 "id": "id2",
                 "name": "Schedule 2",
                 "mode": "mode2",
-                "task_instructions": "instructions 2",
-                "schedule_type": ScheduleType.TIME,
-                "start_minute": "30",
-                "created_at": "2023-01-01T00:00:00Z",
-                "updated_at": "2023-01-01T00:00:00Z"
+                "taskInstructions": "instructions 2",
+                "scheduleType": ScheduleType.TIME,
+                "startMinute": "30",
+                "createdAt": "2023-01-01T00:00:00Z",
+                "updatedAt": "2023-01-01T00:00:00Z"
             }
         ]
         container = SchedulesContainer(schedules=[ScheduleData(**s) for s in schedules_data])
@@ -241,11 +241,11 @@ class TestSchedulesContainer:
                     "id": "id1",
                     "name": "Schedule 1",
                     "mode": "mode1",
-                    "task_instructions": "instructions 1",
-                    "schedule_type": ScheduleType.MANUAL,
-                    "start_minute": "00",
-                    "created_at": "2023-01-01T00:00:00Z",
-                    "updated_at": "2023-01-01T00:00:00Z"
+                    "taskInstructions": "instructions 1",
+                    "scheduleType": ScheduleType.MANUAL,
+                    "startMinute": "00",
+                    "createdAt": "2023-01-01T00:00:00Z",
+                    "updatedAt": "2023-01-01T00:00:00Z"
                 }
             ]
         }
@@ -260,11 +260,11 @@ class TestSchedulesContainer:
                 "id": "id1",
                 "name": "Schedule 1",
                 "mode": "mode1",
-                "task_instructions": "instructions 1",
-                "schedule_type": ScheduleType.MANUAL,
-                "start_minute": "00",
-                "created_at": "2023-01-01T00:00:00Z",
-                "updated_at": "2023-01-01T00:00:00Z"
+                "taskInstructions": "instructions 1",
+                "scheduleType": ScheduleType.MANUAL,
+                "startMinute": "00",
+                "createdAt": "2023-01-01T00:00:00Z",
+                "updatedAt": "2023-01-01T00:00:00Z"
             }
         ]
         container = SchedulesContainer(schedules=[ScheduleData(**s) for s in schedules_data])

@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Optional, Union
 from datetime import datetime
 from pathlib import Path
 from enum import Enum
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 import json
 
 
@@ -55,41 +55,135 @@ class PersistentMemorySection(str, Enum):
 
 class ScheduleData(BaseModel):
     """Structured model for schedule information - Compatible with .roo/schedules.json format."""
+    model_config = ConfigDict(populate_by_name=True)
+    
     id: str
     name: str
     mode: str
-    taskInstructions: str
-    scheduleType: str
-    timeInterval: Optional[int] = None
-    timeUnit: Optional[str] = None
-    selectedDays: Dict[str, bool] = Field(default_factory=dict)
-    startDate: Optional[str] = None
-    startHour: Optional[str] = None
-    startMinute: str = "00"
-    expirationDate: Optional[str] = None
-    expirationHour: Optional[str] = None
-    expirationMinute: Optional[str] = None
-    requireActivity: bool = False
-    active: bool = True
-    taskInteraction: str = "wait"
-    inactivityDelay: str = "3"
-    lastExecutionTime: Optional[str] = None
-    lastSkippedTime: Optional[str] = None
-    lastTaskId: Optional[str] = None
-    nextExecutionTime: Optional[str] = None
-    modeDisplayName: Optional[str] = None
-    createdAt: str
-    updatedAt: str
+    # Support both snake_case and camelCase field naming
+    task_instructions: Optional[str] = Field(default=None, alias="taskInstructions")
+    schedule_type: Optional[str] = Field(default=None, alias="scheduleType")
+    time_interval: Optional[int] = Field(default=None, alias="timeInterval")
+    time_unit: Optional[str] = Field(default=None, alias="timeUnit")
+    selected_days: Dict[str, bool] = Field(default_factory=dict, alias="selectedDays")
+    start_date: Optional[str] = Field(default=None, alias="startDate")
+    start_hour: Optional[str] = Field(default=None, alias="startHour")
+    start_minute: str = Field(default="00", alias="startMinute")
+    expiration_date: Optional[str] = Field(default=None, alias="expirationDate")
+    expiration_hour: Optional[str] = Field(default=None, alias="expirationHour")
+    expiration_minute: Optional[str] = Field(default=None, alias="expirationMinute")
+    require_activity: bool = Field(default=False, alias="requireActivity")
+    active: bool = Field(default=True, alias="active")
+    task_interaction: str = Field(default="wait", alias="taskInteraction")
+    inactivity_delay: str = Field(default="3", alias="inactivityDelay")
+    last_execution_time: Optional[str] = Field(default=None, alias="lastExecutionTime")
+    last_skipped_time: Optional[str] = Field(default=None, alias="lastSkippedTime")
+    last_task_id: Optional[str] = Field(default=None, alias="lastTaskId")
+    next_execution_time: Optional[str] = Field(default=None, alias="nextExecutionTime")
+    mode_display_name: Optional[str] = Field(default=None, alias="modeDisplayName")
+    created_at: Optional[str] = Field(default=None, alias="createdAt")
+    updated_at: Optional[str] = Field(default=None, alias="updatedAt")
+    
+    # Legacy camelCase properties for backward compatibility
+    @property
+    def taskInstructions(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.task_instructions
+    
+    @property
+    def scheduleType(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.schedule_type
+    
+    @property
+    def timeInterval(self) -> Optional[int]:
+        """Legacy property for camelCase compatibility."""
+        return self.time_interval
+    
+    @property
+    def timeUnit(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.time_unit
+    
+    @property
+    def selectedDays(self) -> Dict[str, bool]:
+        """Legacy property for camelCase compatibility."""
+        return self.selected_days
+    
+    @property
+    def startDate(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.start_date
+    
+    @property
+    def expirationDate(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.expiration_date
+    
+    @property
+    def expirationHour(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.expiration_hour
+    
+    @property
+    def expirationMinute(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.expiration_minute
+    
+    @property
+    def taskInteraction(self) -> str:
+        """Legacy property for camelCase compatibility."""
+        return self.task_interaction
+    
+    @property
+    def inactivityDelay(self) -> str:
+        """Legacy property for camelCase compatibility."""
+        return self.inactivity_delay
+    
+    @property
+    def lastExecutionTime(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.last_execution_time
+    
+    @property
+    def lastSkippedTime(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.last_skipped_time
+    
+    @property
+    def lastTaskId(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.last_task_id
+    
+    @property
+    def nextExecutionTime(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.next_execution_time
+    
+    @property
+    def modeDisplayName(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.mode_display_name
+    
+    @property
+    def createdAt(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.created_at
+    
+    @property
+    def updatedAt(self) -> Optional[str]:
+        """Legacy property for camelCase compatibility."""
+        return self.updated_at
 
-    @field_validator("timeUnit")
+    @field_validator("time_unit")
     @classmethod
     def validate_time_unit(cls, v):
         """Validate time unit values."""
         if v and v not in ["minute", "hour", "day"]:
-            raise ValueError("timeUnit must be 'minute', 'hour', or 'day'")
+            raise ValueError("time_unit must be 'minute', 'hour', or 'day'")
         return v
 
-    @field_validator("timeInterval")
+    @field_validator("time_interval")
     @classmethod
     def validate_time_interval(cls, v):
         """Validate time interval is numeric and positive."""
@@ -99,20 +193,20 @@ class ScheduleData(BaseModel):
                 if isinstance(v, str):
                     v = int(v)
                 if not isinstance(v, int) or v <= 0:
-                    raise ValueError("timeInterval must be a positive integer")
+                    raise ValueError("time_interval must be a positive integer")
             except (ValueError, TypeError):
-                raise ValueError("timeInterval must be a valid positive integer")
+                raise ValueError("time_interval must be a valid positive integer")
         return v
 
-    @field_validator("taskInteraction")
+    @field_validator("task_interaction")
     @classmethod
     def validate_task_interaction(cls, v):
         """Validate task interaction values."""
         if v and v not in ["wait", "interrupt", "background"]:
-            raise ValueError("taskInteraction must be 'wait', 'interrupt', or 'background'")
+            raise ValueError("task_interaction must be 'wait', 'interrupt', or 'background'")
         return v
 
-    @field_validator("scheduleType")
+    @field_validator("schedule_type")
     @classmethod
     def validate_schedule_type(cls, v):
         """Validate and convert schedule type to enum."""
@@ -124,11 +218,11 @@ class ScheduleData(BaseModel):
             for schedule_type in ScheduleType:
                 if schedule_type.value == v_lower:
                     return schedule_type
-            raise ValueError(f"scheduleType '{v}' must be one of: {[st.value for st in ScheduleType]}")
+            raise ValueError(f"schedule_type '{v}' must be one of: {[st.value for st in ScheduleType]}")
         elif isinstance(v, ScheduleType):
             return v
         else:
-            raise ValueError("scheduleType must be a string or ScheduleType enum value")
+            raise ValueError("schedule_type must be a string or ScheduleType enum value")
 
 
 class SchedulesContainer(BaseModel):
